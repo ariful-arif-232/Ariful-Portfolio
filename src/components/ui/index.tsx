@@ -5,10 +5,11 @@ import {
   useEffect,
   useState,
   type ButtonHTMLAttributes,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type Variants } from 'framer-motion'
 import { cn } from '../../lib/utils'
 
 /* --------------------------------- Reveal -------------------------------- */
@@ -101,9 +102,77 @@ export function RevealItem({
   )
 }
 
+/* --------------------------------- Tilt ---------------------------------- */
+
+/**
+ * Wraps children in a subtle mouse-driven 3D tilt, the kind of quiet depth
+ * cue used on premium product/portfolio sites. No-ops for touch input and
+ * under reduced-motion, so it never fights a tap or a scroll.
+ */
+export function TiltCard({
+  children,
+  className,
+  max = 8,
+}: {
+  children: ReactNode
+  className?: string
+  max?: number
+}) {
+  const reduceMotion = useReducedMotion()
+  const px = useMotionValue(0.5)
+  const py = useMotionValue(0.5)
+  const springX = useSpring(px, { stiffness: 260, damping: 24 })
+  const springY = useSpring(py, { stiffness: 260, damping: 24 })
+  const rotateX = useTransform(springY, [0, 1], [max, -max])
+  const rotateY = useTransform(springX, [0, 1], [-max, max])
+
+  if (reduceMotion) return <div className={className}>{children}</div>
+
+  function onMove(e: ReactPointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== 'mouse') return
+    const rect = e.currentTarget.getBoundingClientRect()
+    px.set((e.clientX - rect.left) / rect.width)
+    py.set((e.clientY - rect.top) / rect.height)
+  }
+  function onLeave() {
+    px.set(0.5)
+    py.set(0.5)
+  }
+
+  return (
+    <motion.div
+      className={className}
+      style={{ rotateX, rotateY, transformPerspective: 900 }}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+/* ------------------------------ Browser frame ----------------------------- */
+
+/** A quiet browser-window chrome for presenting screenshots — on-brand for a dev portfolio. */
+export function BrowserFrame({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cn('overflow-hidden rounded-2xl border border-line bg-surface', className)}>
+      <div className="flex items-center gap-3 border-b border-line bg-soft px-3.5 py-2.5">
+        <div className="flex gap-1.5" aria-hidden="true">
+          <span className="h-2 w-2 rounded-full bg-ember/70" />
+          <span className="h-2 w-2 rounded-full bg-accent/70" />
+          <span className="h-2 w-2 rounded-full bg-teal/70" />
+        </div>
+        <div className="h-4 flex-1 rounded-full bg-line/60" aria-hidden="true" />
+      </div>
+      {children}
+    </div>
+  )
+}
+
 /* -------------------------------- Button -------------------------------- */
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'invert'
 type Size = 'sm' | 'md'
 
 const VARIANTS: Record<Variant, string> = {
@@ -111,6 +180,8 @@ const VARIANTS: Record<Variant, string> = {
   secondary: 'bg-surface text-ink border border-line hover:border-accent/40 hover:bg-accent-soft/60',
   ghost: 'bg-transparent text-subtle border border-transparent hover:text-ink hover:bg-soft',
   danger: 'bg-white text-[#b42318] border border-[#fecdca] hover:bg-[#fef3f2]',
+  // For buttons placed on dark sections (e.g. the closing contact CTA)
+  invert: 'bg-white/10 text-white border border-white/15 backdrop-blur-sm hover:bg-white/15 hover:border-white/30',
 }
 
 const SIZES: Record<Size, string> = {

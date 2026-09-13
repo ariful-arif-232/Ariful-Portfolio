@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useProject } from '../hooks/useContent'
-import { Badge, EmptyState, Icon, LinkButton, Reveal, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
+import { Badge, BrowserFrame, EmptyState, Icon, LinkButton, Reveal, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
 import { ProjectCard } from '../components/projects/ProjectCard'
 import { Seo } from '../components/layout/Seo'
 import { dateRange, paragraphs, resolveMedia } from '../lib/utils'
@@ -112,14 +112,16 @@ export default function ProjectDetail() {
         </header>
 
         {heroImage ? (
-          <div className="gutter">
-            <img
-              src={heroImage}
-              alt={`${project.title} cover`}
-              loading="eager"
-              className="w-full rounded-2xl border border-line object-cover shadow-lift"
-            />
-          </div>
+          <Reveal className="gutter">
+            <BrowserFrame className="shadow-lift">
+              <img
+                src={heroImage}
+                alt={`${project.title} cover`}
+                loading="eager"
+                className="w-full object-cover"
+              />
+            </BrowserFrame>
+          </Reveal>
         ) : null}
 
         <div className="gutter grid gap-10 py-12 md:py-16 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16">

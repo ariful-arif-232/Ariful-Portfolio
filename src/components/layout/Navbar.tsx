@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import { useSite } from '../../hooks/useSiteData'
 import { cn, resolveMedia } from '../../lib/utils'
 import { Icon, socialIcon } from '../ui'
@@ -19,6 +19,8 @@ export function Navbar() {
   const [open, setOpen] = useState(false)
   const { pathname, hash } = useLocation()
   const reduceMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll()
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, restDelta: 0.001 })
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -57,6 +59,11 @@ export function Navbar() {
           : 'bg-white/30 backdrop-blur-sm',
       )}
     >
+      <motion.div
+        style={{ scaleX: progress }}
+        className="absolute inset-x-0 top-0 h-[2.5px] origin-left bg-gradient-to-r from-accent via-teal to-ember"
+        aria-hidden="true"
+      />
       <nav
         aria-label="Main"
         className="gutter mx-auto flex h-[72px] max-w-shell items-center justify-between gap-6"

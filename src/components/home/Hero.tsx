@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 import { useSite } from '../../hooks/useSiteData'
 import { cn, resolveMedia } from '../../lib/utils'
 import { Icon, LinkButton, socialIcon } from '../ui'
@@ -30,11 +30,67 @@ function useIsNarrow(query = '(max-width: 767px)') {
   return narrow
 }
 
+/** Types the headline in with a per-letter 3D flip — the hero's single showpiece animation. */
+function AnimatedName({ text, reduceMotion }: { text: string; reduceMotion: boolean | null }) {
+  if (reduceMotion || !text) return <>{text}</>
+  return (
+    <motion.span
+      initial="hidden"
+      animate="show"
+      aria-label={text}
+      style={{ perspective: 400 }}
+      className="inline-block"
+      variants={{ show: { transition: { staggerChildren: 0.032, delayChildren: 0.15 } } }}
+    >
+      {Array.from(text).map((ch, i) => (
+        <motion.span
+          key={i}
+          aria-hidden="true"
+          variants={{
+            hidden: { opacity: 0, y: 24, rotateX: -60 },
+            show: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+          }}
+          className="inline-block"
+          style={ch === ' ' ? { whiteSpace: 'pre' } : undefined}
+        >
+          {ch}
+        </motion.span>
+      ))}
+    </motion.span>
+  )
+}
+
 export function Hero() {
   const { settings, socialLinks, heroLabels } = useSite()
   const reduceMotion = useReducedMotion()
   const isNarrow = useIsNarrow()
   const hero = settings.hero
+  const sectionRef = useRef<HTMLElement>(null)
+
+  // Normalized pointer position (-0.5..0.5) driving the layered parallax below.
+  const px = useMotionValue(0)
+  const py = useMotionValue(0)
+  const spx = useSpring(px, { stiffness: 60, damping: 18, mass: 0.4 })
+  const spy = useSpring(py, { stiffness: 60, damping: 18, mass: 0.4 })
+
+  const enableParallax = !reduceMotion && !isNarrow
+  const blobNear = useTransform(spx, [-0.5, 0.5], [18, -18])
+  const blobNearY = useTransform(spy, [-0.5, 0.5], [14, -14])
+  const blobFar = useTransform(spx, [-0.5, 0.5], [-9, 9])
+  const blobFarY = useTransform(spy, [-0.5, 0.5], [-7, 7])
+  const portraitRotateY = useTransform(spx, [-0.5, 0.5], [-5, 5])
+  const portraitRotateX = useTransform(spy, [-0.5, 0.5], [4, -4])
+
+  function onPointerMove(e: ReactPointerEvent<HTMLElement>) {
+    if (!enableParallax || e.pointerType !== 'mouse') return
+    const rect = e.currentTarget.getBoundingClientRect()
+    px.set((e.clientX - rect.left) / rect.width - 0.5)
+    py.set((e.clientY - rect.top) / rect.height - 0.5)
+  }
+  function onPointerLeave() {
+    px.set(0)
+    py.set(0)
+  }
 
   const portrait = resolveMedia(hero.image_url) || resolveMedia(DEFAULT_PORTRAIT)
   const poster = resolveMedia(hero.video_poster_url)
@@ -54,12 +110,26 @@ export function Hero() {
       }
 
   return (
-    <section className="relative overflow-hidden" aria-label="Introduction">
-      {/* Layered backdrop: dot grid + soft brand-colored glows, decorative only */}
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden"
+      aria-label="Introduction"
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+    >
+      {/* Layered backdrop: dot grid + soft brand-colored glows, decorative only.
+          The two glows drift at different speeds under the cursor — a cheap
+          multi-plane parallax that reads as real depth without any 3D library. */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <div className="absolute inset-0 bg-dot-grid opacity-[0.35]" />
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-accent/15 blur-[90px]" />
-        <div className="absolute -right-16 top-1/3 h-80 w-80 rounded-full bg-teal/15 blur-[100px]" />
+        <motion.div
+          style={enableParallax ? { x: blobFar, y: blobFarY } : undefined}
+          className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-accent/15 blur-[90px]"
+        />
+        <motion.div
+          style={enableParallax ? { x: blobNear, y: blobNearY } : undefined}
+          className="absolute -right-16 top-1/3 h-80 w-80 rounded-full bg-teal/15 blur-[100px]"
+        />
         <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-white via-white/60 to-transparent" />
       </div>
 
@@ -120,7 +190,7 @@ export function Hero() {
             className="mt-3 font-display font-bold leading-[0.94] tracking-[-0.035em]"
             style={{ fontSize: 'clamp(2.75rem, 9vw, 5.25rem)' }}
           >
-            {hero.name}
+            <AnimatedName text={hero.name} reduceMotion={reduceMotion} />
             <span className="bg-gradient-to-r from-accent to-teal bg-clip-text text-transparent">.</span>
           </h1>
 
@@ -178,7 +248,14 @@ export function Hero() {
           transition={{ duration: 0.55, delay: reduceMotion ? 0 : 0.12, ease: [0.22, 1, 0.36, 1] }}
           className="relative order-1 lg:order-2"
         >
-          <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+          <motion.div
+            className="relative mx-auto w-full max-w-[440px] lg:max-w-none"
+            style={
+              enableParallax
+                ? { rotateX: portraitRotateX, rotateY: portraitRotateY, transformPerspective: 1200 }
+                : undefined
+            }
+          >
             {/* Soft halo grounds the cut-out portrait without a hard image frame */}
             <div
               className="absolute inset-x-[8%] bottom-[6%] top-[10%] rounded-[999px] bg-gradient-to-b from-accent-soft to-transparent blur-2xl"
@@ -236,7 +313,7 @@ export function Hero() {
                 {label.text}
               </motion.span>
             ))}
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

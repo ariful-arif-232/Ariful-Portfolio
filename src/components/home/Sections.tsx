@@ -1,8 +1,20 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useSite } from '../../hooks/useSiteData'
 import { useEducation, useExperiences, useServices, useSkills } from '../../hooks/useContent'
 import { dateRange, paragraphs, resolveMedia } from '../../lib/utils'
-import { Badge, contentIcon, EmptyState, Icon, LinkButton, Reveal, RevealGroup, RevealItem, SectionLoader } from '../ui'
+import {
+  Badge,
+  contentIcon,
+  EmptyState,
+  Icon,
+  LinkButton,
+  Reveal,
+  RevealGroup,
+  RevealItem,
+  SectionLoader,
+  TiltCard,
+} from '../ui'
 import { SectionHeading } from './SectionHeading'
 import type { SkillCategory } from '../../lib/types'
 
@@ -21,19 +33,31 @@ export function AboutPreview() {
   return (
     <section className="section-divider gutter py-14 md:py-20">
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-        <Reveal className="relative">
+        <Reveal className="relative mx-auto w-full max-w-[320px] lg:mx-0 lg:max-w-none">
           <div
             className="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-accent/10 via-transparent to-teal/10"
             aria-hidden="true"
           />
-          <img
-            src={image}
-            alt=""
-            loading="lazy"
-            width={480}
-            height={480}
-            className="w-full max-w-[320px] rounded-2xl border border-line object-cover shadow-lift lg:max-w-none"
-          />
+          <TiltCard max={5}>
+            <img
+              src={image}
+              alt=""
+              loading="lazy"
+              width={480}
+              height={480}
+              className="w-full rounded-2xl border border-line object-cover shadow-lift"
+            />
+          </TiltCard>
+          {about.experience_years ? (
+            <div className="absolute -bottom-5 -right-3 flex flex-col items-center justify-center rounded-2xl border border-line bg-surface px-4 py-3 text-center shadow-lift sm:-right-6">
+              <span className="font-display text-2xl font-bold leading-none text-accent">
+                {about.experience_years}+
+              </span>
+              <span className="mt-1 text-[0.6875rem] font-medium uppercase tracking-wide text-subtle">
+                Years exp.
+              </span>
+            </div>
+          ) : null}
         </Reveal>
 
         <Reveal delay={0.08}>
@@ -103,7 +127,23 @@ export function SkillsSection() {
         <SectionHeading title="Skills" lead="The tools I reach for most often, grouped by where they sit in a build." />
       </Reveal>
 
-      <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {skills.length > 4 ? (
+        <div
+          className="relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+          aria-hidden="true"
+        >
+          <div className="flex w-max gap-2.5 motion-safe:animate-marquee">
+            {[...skills, ...skills].map((skill, i) => (
+              <span key={i} className="chip shrink-0 gap-2 text-subtle/80">
+                {skill.icon ? <Icon name={contentIcon(skill.icon)} className="h-3.5 w-3.5" /> : null}
+                {skill.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      <RevealGroup className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {grouped.map((group) => (
           <RevealItem key={group.category} className="card card-hover p-5 sm:p-6">
             <p className="flex items-center gap-2 font-display text-[0.9375rem] font-semibold">
@@ -146,18 +186,24 @@ export function ServicesSection() {
 
       <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {services.map((service) => (
-          <RevealItem key={service.id} as="article" className="card card-hover group relative overflow-hidden p-5">
-            <div
-              className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-accent-soft opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              aria-hidden="true"
-            />
-            <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent-soft to-teal-soft text-accent shadow-sm">
-              <Icon name={contentIcon(service.icon)} className="h-5 w-5" />
-            </span>
-            <h3 className="relative mt-4 font-display text-[1.0625rem] font-semibold leading-snug">{service.title}</h3>
-            {service.description ? (
-              <p className="relative mt-2 text-[0.9375rem] leading-relaxed text-subtle">{service.description}</p>
-            ) : null}
+          <RevealItem key={service.id}>
+            <TiltCard max={6} className="h-full">
+              <article className="card card-hover group relative h-full overflow-hidden p-5">
+                <div
+                  className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-accent-soft opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+                <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent-soft to-teal-soft text-accent shadow-sm">
+                  <Icon name={contentIcon(service.icon)} className="h-5 w-5" />
+                </span>
+                <h3 className="relative mt-4 font-display text-[1.0625rem] font-semibold leading-snug">
+                  {service.title}
+                </h3>
+                {service.description ? (
+                  <p className="relative mt-2 text-[0.9375rem] leading-relaxed text-subtle">{service.description}</p>
+                ) : null}
+              </article>
+            </TiltCard>
           </RevealItem>
         ))}
       </RevealGroup>
@@ -169,6 +215,10 @@ export function ServicesSection() {
 
 export function ExperienceSection() {
   const { data: items, loading } = useExperiences()
+  const listRef = useRef<HTMLOListElement>(null)
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start 0.85', 'end 0.4'] })
+  const fillHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+
   if (loading) return <SectionLoader />
   if (!items.length) return null
 
@@ -178,8 +228,18 @@ export function ExperienceSection() {
         <SectionHeading title="Experience" />
       </Reveal>
 
-      <RevealGroup className="mt-10" stagger={0.1}>
-        <ol className="relative space-y-10 before:absolute before:bottom-0 before:left-[7px] before:top-2 before:w-px before:bg-line sm:before:left-[203px]">
+      <RevealGroup className="relative mt-10" stagger={0.1}>
+        {/* Base rail plus a scroll-linked gradient fill — the timeline "progresses" as you read it */}
+        <span
+          className="pointer-events-none absolute bottom-0 left-[7px] top-2 w-px bg-line sm:left-[203px]"
+          aria-hidden="true"
+        />
+        <motion.span
+          className="pointer-events-none absolute left-[7px] top-2 w-px origin-top bg-gradient-to-b from-accent to-teal sm:left-[203px]"
+          style={{ height: fillHeight }}
+          aria-hidden="true"
+        />
+        <ol ref={listRef} className="space-y-10">
           {items.map((item) => (
             <RevealItem key={item.id} as="li" className="relative grid gap-2 pl-7 sm:grid-cols-[190px_1fr] sm:gap-10 sm:pl-0">
               <span
@@ -285,34 +345,53 @@ export function EducationSection() {
 
 export function ContactCta() {
   const { settings } = useSite()
+  const reduceMotion = useReducedMotion()
 
   return (
     <section className="section-divider gutter py-14 md:py-20">
-      <Reveal className="relative overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-soft via-surface to-accent-soft/40 px-6 py-12 text-center shadow-lift sm:px-12">
+      <Reveal className="relative overflow-hidden rounded-[2rem] bg-ink px-6 py-16 text-center sm:px-12 sm:py-20">
+        {/* Dark, single-focus closer — deliberately the boldest moment on the page */}
+        <div className="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.08] invert" aria-hidden="true" />
         <div
-          className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-accent/10 blur-[80px]"
+          className="pointer-events-none absolute left-1/2 top-0 h-72 w-96 -translate-x-1/2 -translate-y-1/3 rounded-full bg-accent/40 blur-[110px]"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-teal/10 blur-[80px]"
+          className="pointer-events-none absolute bottom-0 right-0 h-56 w-56 translate-x-1/4 translate-y-1/4 rounded-full bg-teal/30 blur-[100px]"
           aria-hidden="true"
         />
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[8%] top-[14%] hidden h-14 w-14 rounded-2xl border border-white/15 sm:block"
+          animate={reduceMotion ? undefined : { rotate: 360 }}
+          transition={reduceMotion ? undefined : { duration: 22, repeat: Infinity, ease: 'linear' }}
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-[16%] left-[10%] hidden h-8 w-8 rounded-full border border-dashed border-ember/40 sm:block"
+        />
+
+        <p className="relative text-sm font-medium text-white/50">Let's build something</p>
         <h2
-          className="relative mx-auto max-w-2xl font-display font-semibold tracking-[-0.02em]"
-          style={{ fontSize: 'clamp(1.625rem, 3.6vw, 2.5rem)' }}
+          className="relative mx-auto mt-3 max-w-2xl font-display font-bold tracking-[-0.03em] text-white"
+          style={{ fontSize: 'clamp(2rem, 4.8vw, 3.25rem)' }}
         >
-          Have something you want built?
+          Have an idea worth{' '}
+          <span className="bg-gradient-to-r from-accent via-teal to-ember bg-clip-text text-transparent">
+            building
+          </span>
+          ?
         </h2>
-        <p className="prose-body relative mx-auto mt-4 text-center">
+        <p className="relative mx-auto mt-4 max-w-md text-center text-[1.0625rem] leading-[1.75] text-white/65">
           {settings.contact.form_note || 'Tell me what you are working on and I will get back to you.'}
         </p>
-        <div className="relative mt-8 flex flex-wrap justify-center gap-3">
+        <div className="relative mt-9 flex flex-wrap justify-center gap-3">
           <LinkButton to="/contact">
             Start a conversation
             <Icon name="arrow-right" className="h-4 w-4" />
           </LinkButton>
           {settings.contact.email ? (
-            <LinkButton href={`mailto:${settings.contact.email}`} variant="secondary">
+            <LinkButton href={`mailto:${settings.contact.email}`} variant="invert">
               <Icon name="mail" className="h-4 w-4" />
               {settings.contact.email}
             </LinkButton>

@@ -40,6 +40,15 @@ export default {
       backgroundImage: {
         grain: 'radial-gradient(circle at 1px 1px, rgba(17,24,39,0.06) 1px, transparent 0)',
       },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 26s linear infinite',
+      },
     },
   },
   plugins: [],
