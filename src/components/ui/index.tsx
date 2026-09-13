@@ -8,7 +8,98 @@ import {
   type ReactNode,
 } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { cn } from '../../lib/utils'
+
+/* --------------------------------- Reveal -------------------------------- */
+
+const REVEAL_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+}
+
+/** Fades and lifts children into view once as they cross the viewport. */
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  as: Tag = 'div',
+}: {
+  children: ReactNode
+  className?: string
+  delay?: number
+  as?: 'div' | 'li' | 'article'
+}) {
+  const reduceMotion = useReducedMotion()
+  if (reduceMotion) {
+    const El = Tag
+    return <El className={className}>{children}</El>
+  }
+  const MotionTag = motion[Tag]
+  return (
+    <MotionTag
+      className={className}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: '-80px' }}
+      variants={REVEAL_VARIANTS}
+      transition={{ delay }}
+    >
+      {children}
+    </MotionTag>
+  )
+}
+
+/**
+ * Container that staggers its `RevealItem` children into view as a group.
+ * The container owns the single viewport trigger; items inherit it.
+ */
+export function RevealGroup({
+  children,
+  className,
+  stagger = 0.08,
+}: {
+  children: ReactNode
+  className?: string
+  stagger?: number
+}) {
+  const reduceMotion = useReducedMotion()
+  if (reduceMotion) return <div className={className}>{children}</div>
+  return (
+    <motion.div
+      className={className}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ staggerChildren: stagger }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+/** A single staggered item — use inside `RevealGroup`, one per card/row. */
+export function RevealItem({
+  children,
+  className,
+  as: Tag = 'div',
+}: {
+  children: ReactNode
+  className?: string
+  as?: 'div' | 'li' | 'article'
+}) {
+  const reduceMotion = useReducedMotion()
+  if (reduceMotion) {
+    const El = Tag
+    return <El className={className}>{children}</El>
+  }
+  const MotionTag = motion[Tag]
+  return (
+    <MotionTag className={className} variants={REVEAL_VARIANTS}>
+      {children}
+    </MotionTag>
+  )
+}
 
 /* -------------------------------- Button -------------------------------- */
 
@@ -16,8 +107,8 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 type Size = 'sm' | 'md'
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-ink text-white hover:bg-[#2b2b2b] border border-ink',
-  secondary: 'bg-surface text-ink border border-line hover:border-[#cdd5e0] hover:bg-soft',
+  primary: 'btn-glow text-white border border-transparent',
+  secondary: 'bg-surface text-ink border border-line hover:border-accent/40 hover:bg-accent-soft/60',
   ghost: 'bg-transparent text-subtle border border-transparent hover:text-ink hover:bg-soft',
   danger: 'bg-white text-[#b42318] border border-[#fecdca] hover:bg-[#fef3f2]',
 }
@@ -28,7 +119,8 @@ const SIZES: Record<Size, string> = {
 }
 
 const BUTTON_BASE =
-  'inline-flex items-center justify-center rounded-xl font-medium transition-colors duration-200 ' +
+  'group inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 ' +
+  '[&_svg]:transition-transform [&_svg]:duration-300 hover:[&_svg:last-child]:translate-x-0.5 ' +
   'disabled:cursor-not-allowed disabled:opacity-55'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

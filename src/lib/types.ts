@@ -184,6 +184,10 @@ export interface ThemeSettings {
   outer_bg: string
   accent: string
   micro_accent: string
+  /** Optional extras — fall back to defaults when not set from Admin > Settings > Theme. */
+  secondary_accent?: string
+  surface_bg?: string
+  soft_bg?: string
 }
 
 export interface SettingsMap {
@@ -228,5 +232,12 @@ export const SETTINGS_DEFAULTS: SettingsMap = {
   contact: { email: '', phone: '', whatsapp: '', location: '', form_note: '' },
   resume: { url: '', filename: '' },
   seo: { site_title: 'Portfolio', meta_description: '', keywords: '', og_image_url: '' },
-  theme: { outer_bg: '#E9EDF2', accent: '#2563EB', micro_accent: '#FF6B4A' },
+  theme: {
+    outer_bg: '#E9EDF2',
+    accent: '#4169E1',
+    micro_accent: '#FF715B',
+    secondary_accent: '#2746B8',
+    surface_bg: '#FFFFFF',
+    soft_bg: '#F8FAFC',
+  },
 }

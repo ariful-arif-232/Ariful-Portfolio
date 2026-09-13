@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useProjects } from '../hooks/useContent'
 import { ProjectCard } from '../components/projects/ProjectCard'
-import { EmptyState, ErrorNote, Icon, SectionLoader } from '../components/ui'
+import { EmptyState, ErrorNote, Icon, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
 import { Seo } from '../components/layout/Seo'
-import { GridRules } from '../components/layout/PublicLayout'
+import { GridRules, HeaderBackdrop } from '../components/layout/PublicLayout'
 import { cn } from '../lib/utils'
 
 export default function Projects() {
@@ -34,9 +34,13 @@ export default function Projects() {
       <Seo title="Projects" description="Selected work, side projects and research." />
 
       <section className="relative overflow-hidden">
+        <HeaderBackdrop />
         <GridRules />
         <div className="gutter relative py-12 md:py-16">
-          <p className="eyebrow">Projects</p>
+          <p className="eyebrow flex items-center gap-2 font-medium">
+            <span className="h-px w-8 bg-gradient-to-r from-accent to-transparent" aria-hidden="true" />
+            Projects
+          </p>
           <h1
             className="mt-3 max-w-3xl font-display font-bold leading-[1.05] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2.25rem, 6vw, 3.75rem)' }}
@@ -62,10 +66,10 @@ export default function Projects() {
                 onClick={() => setCategory(c)}
                 aria-pressed={category === c}
                 className={cn(
-                  'shrink-0 rounded-full border px-4 py-2 text-[0.875rem] transition-colors duration-200',
+                  'shrink-0 rounded-full border px-4 py-2 text-[0.875rem] transition-all duration-200',
                   category === c
-                    ? 'border-ink bg-ink text-white'
-                    : 'border-line bg-surface text-subtle hover:border-[#cdd5e0] hover:text-ink',
+                    ? 'border-transparent bg-gradient-to-b from-accent to-accent-deep text-white shadow-glow'
+                    : 'border-line bg-surface text-subtle hover:border-accent/30 hover:text-ink',
                 )}
               >
                 {c}
@@ -108,11 +112,16 @@ export default function Projects() {
           ) : null}
 
           {visible.length ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {visible.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+            <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {visible.map((project, i) => (
+                <RevealItem
+                  key={project.id}
+                  className={i === 0 ? 'sm:col-span-2 lg:col-span-1' : undefined}
+                >
+                  <ProjectCard project={project} />
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           ) : null}
         </div>
       </section>

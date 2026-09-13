@@ -5,7 +5,7 @@ import { useSite } from '../hooks/useSiteData'
 import { readError } from '../lib/utils'
 import { Button, ErrorNote, Icon, socialIcon } from '../components/ui'
 import { Seo } from '../components/layout/Seo'
-import { GridRules } from '../components/layout/PublicLayout'
+import { GridRules, HeaderBackdrop } from '../components/layout/PublicLayout'
 
 const EMPTY = { name: '', email: '', subject: '', message: '', website: '' }
 
@@ -65,9 +65,13 @@ export default function Contact() {
       <Seo title="Contact" description="Get in touch about work, collaboration or questions." />
 
       <section className="relative overflow-hidden">
+        <HeaderBackdrop />
         <GridRules />
         <div className="gutter relative py-12 md:py-16">
-          <p className="eyebrow">Contact</p>
+          <p className="eyebrow flex items-center gap-2 font-medium">
+            <span className="h-px w-8 bg-gradient-to-r from-accent to-transparent" aria-hidden="true" />
+            Contact
+          </p>
           <h1
             className="mt-3 max-w-3xl font-display font-bold leading-[1.05] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2.25rem, 6vw, 3.75rem)' }}

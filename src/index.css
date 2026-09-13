@@ -5,8 +5,18 @@
 @layer base {
   :root {
     --outer-bg: #e9edf2;
-    --accent: #2563eb;
-    --micro-accent: #ff6b4a;
+    --accent: #4169e1;
+    --accent-deep: #2746b8;
+    --micro-accent: #ff715b;
+    --teal-accent: #14b8a6;
+    --surface-bg: #ffffff;
+    --soft-bg: #f8fafc;
+
+    /* RGB triples of the colors above, for Tailwind's rgb(var(--x) / <alpha>) opacity syntax */
+    --accent-rgb: 65 105 225;
+    --accent-deep-rgb: 39 70 184;
+    --micro-accent-rgb: 255 113 91;
+    --teal-accent-rgb: 20 184 166;
   }
 
   * {
@@ -93,7 +103,22 @@
   }
 
   .card-hover {
-    @apply transition duration-300 ease-out hover:border-[#d5dce7] hover:shadow-lift;
+    @apply transition duration-300 ease-out hover:-translate-y-1 hover:border-[#d5dce7] hover:shadow-lift;
+  }
+
+  /* Premium primary CTA: gradient fill with a soft brand-colored glow */
+  .btn-glow {
+    @apply bg-gradient-to-b from-accent to-accent-deep shadow-glow transition-all duration-300 ease-out;
+  }
+  .btn-glow:hover {
+    @apply shadow-glow-lg;
+    transform: translateY(-1px);
+  }
+
+  /* Faint dot-grid used behind hero/section backgrounds for texture */
+  .bg-dot-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(17, 24, 39, 0.08) 1px, transparent 0);
+    background-size: 22px 22px;
   }
 
   .chip {

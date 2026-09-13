@@ -112,9 +112,12 @@ const GROUPS: Group[] = [
     label: 'Theme',
     description: 'Accent and background colours.',
     fields: [
-      { name: 'outer_bg', label: 'Outer background', type: 'color' },
       { name: 'accent', label: 'Primary accent', type: 'color' },
+      { name: 'secondary_accent', label: 'Secondary accent', type: 'color' },
       { name: 'micro_accent', label: 'Micro accent', type: 'color' },
+      { name: 'outer_bg', label: 'Outer background', type: 'color' },
+      { name: 'surface_bg', label: 'Surface background', type: 'color' },
+      { name: 'soft_bg', label: 'Soft background', type: 'color' },
     ],
   },
 ]

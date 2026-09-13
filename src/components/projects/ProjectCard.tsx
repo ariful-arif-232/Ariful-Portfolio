@@ -24,7 +24,7 @@ export function ProjectCard({ project }: { project: Project }) {
     <article className="card card-hover group flex flex-col overflow-hidden">
       <Link
         to={`/projects/${project.slug}`}
-        className="block aspect-[16/10] overflow-hidden bg-muted"
+        className="relative block aspect-[16/10] overflow-hidden bg-muted"
         aria-label={`Open ${project.title}`}
       >
         {thumb ? (
@@ -32,7 +32,7 @@ export function ProjectCard({ project }: { project: Project }) {
             src={thumb}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
           />
         ) : (
           // No image yet: a quiet typographic placeholder beats a broken frame
@@ -40,6 +40,10 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.title.charAt(0).toUpperCase()}
           </span>
         )}
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          aria-hidden="true"
+        />
       </Link>
 
       <div className="flex flex-1 flex-col p-5">
@@ -61,7 +65,10 @@ export function ProjectCard({ project }: { project: Project }) {
         {project.technologies.length ? (
           <ul className="mt-4 flex flex-wrap gap-1.5">
             {project.technologies.slice(0, 5).map((tech) => (
-              <li key={tech} className="rounded-md bg-muted px-2 py-1 text-[0.75rem] text-subtle">
+              <li
+                key={tech}
+                className="rounded-md border border-line bg-soft px-2 py-1 text-[0.75rem] text-subtle transition-colors duration-200 group-hover:border-accent/20 group-hover:bg-accent-soft group-hover:text-ink"
+              >
                 {tech}
               </li>
             ))}
@@ -76,10 +83,10 @@ export function ProjectCard({ project }: { project: Project }) {
         <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-line pt-4">
           <Link
             to={`/projects/${project.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[0.875rem] font-medium text-ink transition-colors hover:bg-soft"
+            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[0.875rem] font-medium text-accent transition-colors hover:bg-accent-soft"
           >
             Details
-            <Icon name="arrow-right" className="h-4 w-4" />
+            <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </Link>
 
           {project.github_url ? (

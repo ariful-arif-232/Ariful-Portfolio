@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useProject } from '../hooks/useContent'
-import { Badge, EmptyState, Icon, LinkButton, SectionLoader } from '../components/ui'
+import { Badge, EmptyState, Icon, LinkButton, Reveal, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
 import { ProjectCard } from '../components/projects/ProjectCard'
 import { Seo } from '../components/layout/Seo'
 import { dateRange, paragraphs, resolveMedia } from '../lib/utils'
@@ -117,7 +117,7 @@ export default function ProjectDetail() {
               src={heroImage}
               alt={`${project.title} cover`}
               loading="eager"
-              className="w-full rounded-2xl border border-line object-cover"
+              className="w-full rounded-2xl border border-line object-cover shadow-lift"
             />
           </div>
         ) : null}
@@ -149,15 +149,17 @@ export default function ProjectDetail() {
                 <h2 className="font-display text-[1.25rem] font-semibold">Gallery</h2>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
                   {images.map((image) => (
-                    <figure key={image.id}>
+                    <figure key={image.id} className="group overflow-hidden rounded-xl border border-line">
                       <img
                         src={resolveMedia(image.image_url)}
                         alt={image.caption || `${project.title} screenshot`}
                         loading="lazy"
-                        className="w-full rounded-xl border border-line object-cover"
+                        className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                       />
                       {image.caption ? (
-                        <figcaption className="mt-2 text-sm text-subtle">{image.caption}</figcaption>
+                        <figcaption className="border-t border-line bg-soft px-3 py-2 text-sm text-subtle">
+                          {image.caption}
+                        </figcaption>
                       ) : null}
                     </figure>
                   ))}
@@ -204,12 +206,16 @@ export default function ProjectDetail() {
 
         {related.length ? (
           <section className="section-divider gutter py-12 md:py-16">
-            <h2 className="font-display text-[1.5rem] font-semibold tracking-[-0.02em]">Related projects</h2>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <Reveal>
+              <h2 className="font-display text-[1.5rem] font-semibold tracking-[-0.02em]">Related projects</h2>
+            </Reveal>
+            <RevealGroup className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item) => (
-                <ProjectCard key={item.id} project={item} />
+                <RevealItem key={item.id}>
+                  <ProjectCard project={item} />
+                </RevealItem>
               ))}
-            </div>
+            </RevealGroup>
           </section>
         ) : null}
       </article>

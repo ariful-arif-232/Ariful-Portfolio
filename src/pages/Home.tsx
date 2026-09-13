@@ -11,7 +11,7 @@ import {
 } from '../components/home/Sections'
 import { ProjectCard } from '../components/projects/ProjectCard'
 import { useProjects } from '../hooks/useContent'
-import { Icon, SectionLoader } from '../components/ui'
+import { Icon, Reveal, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
 import { Seo } from '../components/layout/Seo'
 
 function FeaturedProjects() {
@@ -29,25 +29,29 @@ function FeaturedProjects() {
 
   return (
     <section className="section-divider gutter py-14 md:py-20">
-      <SectionHeading
-        title={usingFallback ? 'Recent work' : 'Featured work'}
-        lead="A few things I have built recently, with the reasoning behind them."
-        action={
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-ink hover:text-accent"
-          >
-            All projects
-            <Icon name="arrow-right" className="h-4 w-4" />
-          </Link>
-        }
-      />
+      <Reveal>
+        <SectionHeading
+          title={usingFallback ? 'Recent work' : 'Featured work'}
+          lead="A few things I have built recently, with the reasoning behind them."
+          action={
+            <Link
+              to="/projects"
+              className="group inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-ink hover:text-accent"
+            >
+              All projects
+              <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </Link>
+          }
+        />
+      </Reveal>
 
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+      <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((project, i) => (
+          <RevealItem key={project.id} className={i === 0 ? 'sm:col-span-2 lg:col-span-1' : undefined}>
+            <ProjectCard project={project} />
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   )
 }

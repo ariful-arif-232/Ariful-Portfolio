@@ -73,6 +73,18 @@ export function paragraphs(text: string | null | undefined): string[] {
     .filter(Boolean)
 }
 
+/**
+ * "#4169E1" -> "65 105 225" so Tailwind's `rgb(var(--x) / <alpha-value>)`
+ * color tokens can apply opacity modifiers (e.g. `bg-accent/15`) to a
+ * CSS-variable-driven color. Falls back to the given default on bad input.
+ */
+export function hexToRgbTriple(hex: string | null | undefined, fallback: string): string {
+  const match = /^#?([0-9a-f]{6})$/i.exec((hex ?? '').trim())
+  if (!match) return fallback
+  const int = parseInt(match[1], 16)
+  return `${(int >> 16) & 255} ${(int >> 8) & 255} ${int & 255}`
+}
+
 export function readError(error: unknown): string {
   if (!error) return 'Something went wrong.'
   if (typeof error === 'string') return error

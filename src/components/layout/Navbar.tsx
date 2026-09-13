@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useSite } from '../../hooks/useSiteData'
 import { cn, resolveMedia } from '../../lib/utils'
 import { Icon, socialIcon } from '../ui'
@@ -17,6 +18,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname, hash } = useLocation()
+  const reduceMotion = useReducedMotion()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -50,7 +52,9 @@ export function Navbar() {
     <header
       className={cn(
         'sticky top-0 z-40 transition-all duration-300 ease-out',
-        scrolled ? 'bg-white/85 backdrop-blur-md shadow-[0_1px_0_0_#E8EBEF]' : 'bg-transparent',
+        scrolled
+          ? 'border-b border-line/80 bg-white/75 shadow-[0_1px_0_0_rgba(232,235,239,0.6)] backdrop-blur-xl'
+          : 'bg-white/30 backdrop-blur-sm',
       )}
     >
       <nav
@@ -74,16 +78,22 @@ export function Navbar() {
           <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
         </Link>
 
-        <ul className="hidden items-center gap-7 md:flex">
+        <ul className="hidden items-center gap-1 md:flex">
           {LINKS.map((link) => (
             <li key={link.to}>
               <NavLink
                 to={link.to}
                 className={cn(
-                  'text-[0.9375rem] transition-colors duration-200 hover:text-ink',
+                  'relative rounded-full px-3.5 py-2 text-[0.9375rem] transition-colors duration-200 hover:text-ink',
                   isActive(link.to) ? 'text-ink font-medium' : 'text-subtle',
                 )}
               >
+                {isActive(link.to) ? (
+                  <span
+                    className="absolute inset-0 -z-10 rounded-full bg-accent-soft"
+                    aria-hidden="true"
+                  />
+                ) : null}
                 {link.label}
               </NavLink>
             </li>
@@ -127,50 +137,59 @@ export function Navbar() {
         </button>
       </nav>
 
-      {open ? (
-        <div id="mobile-menu" className="border-t border-line bg-white md:hidden">
-          <ul className="gutter flex flex-col py-2">
-            {LINKS.map((link) => (
-              <li key={link.to}>
-                <NavLink
-                  to={link.to}
-                  className={cn(
-                    'block border-b border-line py-3.5 text-[1.0625rem]',
-                    isActive(link.to) ? 'font-medium text-ink' : 'text-subtle',
-                  )}
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            id="mobile-menu"
+            initial={reduceMotion ? undefined : { height: 0, opacity: 0 }}
+            animate={reduceMotion ? undefined : { height: 'auto', opacity: 1 }}
+            exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-line bg-white md:hidden"
+          >
+            <ul className="gutter flex flex-col py-2">
+              {LINKS.map((link) => (
+                <li key={link.to}>
+                  <NavLink
+                    to={link.to}
+                    className={cn(
+                      'block border-b border-line py-3.5 text-[1.0625rem]',
+                      isActive(link.to) ? 'font-medium text-ink' : 'text-subtle',
+                    )}
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+            <div className="gutter flex flex-wrap items-center gap-3 pb-5">
+              {resumeUrl ? (
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-[0.9375rem] font-medium"
                 >
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-          <div className="gutter flex flex-wrap items-center gap-3 pb-5">
-            {resumeUrl ? (
-              <a
-                href={resumeUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-[0.9375rem] font-medium"
-              >
-                Resume
-                <Icon name="download" className="h-4 w-4" />
-              </a>
-            ) : null}
-            {socialLinks.map((s) => (
-              <a
-                key={s.id}
-                href={s.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label={s.platform}
-                className="rounded-lg border border-line p-2.5 text-subtle"
-              >
-                <Icon name={socialIcon(s.platform)} />
-              </a>
-            ))}
-          </div>
-        </div>
-      ) : null}
+                  Resume
+                  <Icon name="download" className="h-4 w-4" />
+                </a>
+              ) : null}
+              {socialLinks.map((s) => (
+                <a
+                  key={s.id}
+                  href={s.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={s.platform}
+                  className="rounded-lg border border-line p-2.5 text-subtle"
+                >
+                  <Icon name={socialIcon(s.platform)} />
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </header>
   )
 }

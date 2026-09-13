@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useSite } from '../../hooks/useSiteData'
 import { useEducation, useExperiences, useServices, useSkills } from '../../hooks/useContent'
 import { dateRange, paragraphs, resolveMedia } from '../../lib/utils'
-import { Badge, contentIcon, EmptyState, Icon, LinkButton, SectionLoader } from '../ui'
+import { Badge, contentIcon, EmptyState, Icon, LinkButton, Reveal, RevealGroup, RevealItem, SectionLoader } from '../ui'
 import { SectionHeading } from './SectionHeading'
 import type { SkillCategory } from '../../lib/types'
 
@@ -21,18 +21,22 @@ export function AboutPreview() {
   return (
     <section className="section-divider gutter py-14 md:py-20">
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-        <div className="relative">
+        <Reveal className="relative">
+          <div
+            className="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-accent/10 via-transparent to-teal/10"
+            aria-hidden="true"
+          />
           <img
             src={image}
             alt=""
             loading="lazy"
             width={480}
             height={480}
-            className="w-full max-w-[320px] rounded-2xl border border-line object-cover lg:max-w-none"
+            className="w-full max-w-[320px] rounded-2xl border border-line object-cover shadow-lift lg:max-w-none"
           />
-        </div>
+        </Reveal>
 
-        <div>
+        <Reveal delay={0.08}>
           <SectionHeading title="About" />
           <p className="prose-body mt-5">{intro}</p>
 
@@ -69,7 +73,7 @@ export function AboutPreview() {
               <Icon name="arrow-right" className="h-4 w-4" />
             </LinkButton>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   )
@@ -95,15 +99,23 @@ export function SkillsSection() {
 
   return (
     <section id="skills" className="section-divider gutter scroll-mt-20 py-14 md:py-20">
-      <SectionHeading title="Skills" lead="The tools I reach for most often, grouped by where they sit in a build." />
+      <Reveal>
+        <SectionHeading title="Skills" lead="The tools I reach for most often, grouped by where they sit in a build." />
+      </Reveal>
 
-      <div className="mt-10 space-y-px overflow-hidden rounded-2xl border border-line bg-line">
+      <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {grouped.map((group) => (
-          <div key={group.category} className="grid gap-4 bg-surface p-5 sm:grid-cols-[160px_1fr] sm:gap-8 sm:p-6">
-            <p className="font-display text-[0.9375rem] font-semibold">{group.category}</p>
-            <ul className="flex flex-wrap gap-2">
+          <RevealItem key={group.category} className="card card-hover p-5 sm:p-6">
+            <p className="flex items-center gap-2 font-display text-[0.9375rem] font-semibold">
+              <span className="h-2 w-2 rounded-full bg-gradient-to-br from-accent to-teal" aria-hidden="true" />
+              {group.category}
+            </p>
+            <ul className="mt-4 flex flex-wrap gap-2">
               {group.items.map((skill) => (
-                <li key={skill.id} className="chip gap-2">
+                <li
+                  key={skill.id}
+                  className="chip gap-2 transition-colors duration-200 hover:border-accent/30 hover:bg-accent-soft hover:text-ink"
+                >
                   {skill.icon ? <Icon name={contentIcon(skill.icon)} className="h-3.5 w-3.5" /> : null}
                   {skill.name}
                   {typeof skill.level === 'number' ? (
@@ -112,9 +124,9 @@ export function SkillsSection() {
                 </li>
               ))}
             </ul>
-          </div>
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   )
 }
@@ -128,21 +140,27 @@ export function ServicesSection() {
 
   return (
     <section className="section-divider gutter py-14 md:py-20">
-      <SectionHeading title="What I do" lead="How I usually help, whether that is a whole product or one stubborn part of it." />
+      <Reveal>
+        <SectionHeading title="What I do" lead="How I usually help, whether that is a whole product or one stubborn part of it." />
+      </Reveal>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {services.map((service) => (
-          <article key={service.id} className="card card-hover p-5">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent">
+          <RevealItem key={service.id} as="article" className="card card-hover group relative overflow-hidden p-5">
+            <div
+              className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-accent-soft opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              aria-hidden="true"
+            />
+            <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-accent-soft to-teal-soft text-accent shadow-sm">
               <Icon name={contentIcon(service.icon)} className="h-5 w-5" />
             </span>
-            <h3 className="mt-4 font-display text-[1.0625rem] font-semibold leading-snug">{service.title}</h3>
+            <h3 className="relative mt-4 font-display text-[1.0625rem] font-semibold leading-snug">{service.title}</h3>
             {service.description ? (
-              <p className="mt-2 text-[0.9375rem] leading-relaxed text-subtle">{service.description}</p>
+              <p className="relative mt-2 text-[0.9375rem] leading-relaxed text-subtle">{service.description}</p>
             ) : null}
-          </article>
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   )
 }
@@ -156,57 +174,62 @@ export function ExperienceSection() {
 
   return (
     <section className="section-divider gutter py-14 md:py-20">
-      <SectionHeading title="Experience" />
+      <Reveal>
+        <SectionHeading title="Experience" />
+      </Reveal>
 
-      <ol className="mt-10 space-y-0">
-        {items.map((item, index) => (
-          <li
-            key={item.id}
-            className="grid gap-2 border-t border-line py-7 sm:grid-cols-[190px_1fr] sm:gap-10"
-            style={index === 0 ? { borderTopWidth: 0, paddingTop: 0 } : undefined}
-          >
-            <div className="text-sm text-subtle">
-              <p>{dateRange(item.start_date, item.end_date, item.currently_working)}</p>
-              {item.location ? <p className="mt-1">{item.location}</p> : null}
-            </div>
+      <RevealGroup className="mt-10" stagger={0.1}>
+        <ol className="relative space-y-10 before:absolute before:bottom-0 before:left-[7px] before:top-2 before:w-px before:bg-line sm:before:left-[203px]">
+          {items.map((item) => (
+            <RevealItem key={item.id} as="li" className="relative grid gap-2 pl-7 sm:grid-cols-[190px_1fr] sm:gap-10 sm:pl-0">
+              <span
+                className="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-accent shadow-glow sm:left-[196px]"
+                aria-hidden="true"
+              />
 
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                {item.logo_url ? (
-                  <img
-                    src={resolveMedia(item.logo_url)}
-                    alt=""
-                    loading="lazy"
-                    className="h-9 w-9 rounded-lg border border-line object-cover"
-                  />
-                ) : null}
-                <h3 className="font-display text-[1.125rem] font-semibold">{item.role}</h3>
-                {item.currently_working ? <Badge tone="live">Current</Badge> : null}
+              <div className="text-sm text-subtle">
+                <p>{dateRange(item.start_date, item.end_date, item.currently_working)}</p>
+                {item.location ? <p className="mt-1">{item.location}</p> : null}
               </div>
 
-              <p className="mt-1 text-[0.9375rem] text-subtle">
-                {item.company_url ? (
-                  <a
-                    href={item.company_url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="inline-flex items-center gap-1 hover:text-ink"
-                  >
-                    {item.company}
-                    <Icon name="external" className="h-3.5 w-3.5" />
-                  </a>
-                ) : (
-                  item.company
-                )}
-              </p>
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  {item.logo_url ? (
+                    <img
+                      src={resolveMedia(item.logo_url)}
+                      alt=""
+                      loading="lazy"
+                      className="h-9 w-9 rounded-lg border border-line object-cover"
+                    />
+                  ) : null}
+                  <h3 className="font-display text-[1.125rem] font-semibold">{item.role}</h3>
+                  {item.currently_working ? <Badge tone="live">Current</Badge> : null}
+                </div>
 
-              {item.description ? (
-                <p className="prose-body mt-3 text-[0.9375rem]">{item.description}</p>
-              ) : null}
-            </div>
-          </li>
-        ))}
-      </ol>
+                <p className="mt-1 text-[0.9375rem] text-subtle">
+                  {item.company_url ? (
+                    <a
+                      href={item.company_url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1 hover:text-ink"
+                    >
+                      {item.company}
+                      <Icon name="external" className="h-3.5 w-3.5" />
+                    </a>
+                  ) : (
+                    item.company
+                  )}
+                </p>
+
+                {item.description ? (
+                  <p className="prose-body mt-3 text-[0.9375rem]">{item.description}</p>
+                ) : null}
+              </div>
+            </RevealItem>
+          ))}
+        </ol>
+      </RevealGroup>
     </section>
   )
 }
@@ -220,11 +243,13 @@ export function EducationSection() {
 
   return (
     <section className="section-divider gutter py-14 md:py-20">
-      <SectionHeading title="Education" />
+      <Reveal>
+        <SectionHeading title="Education" />
+      </Reveal>
 
-      <div className="mt-10 grid gap-4 md:grid-cols-2">
+      <RevealGroup className="mt-10 grid gap-4 md:grid-cols-2">
         {items.map((item) => (
-          <article key={item.id} className="card p-6">
+          <RevealItem key={item.id} as="article" className="card card-hover p-6">
             <div className="flex items-start gap-4">
               {item.logo_url ? (
                 <img
@@ -234,7 +259,7 @@ export function EducationSection() {
                   className="h-11 w-11 shrink-0 rounded-xl border border-line object-cover"
                 />
               ) : (
-                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-soft text-subtle">
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-teal-soft to-accent-soft text-teal">
                   <Icon name="graduation" className="h-5 w-5" />
                 </span>
               )}
@@ -249,9 +274,9 @@ export function EducationSection() {
             {item.description ? (
               <p className="mt-4 text-[0.9375rem] leading-relaxed text-subtle">{item.description}</p>
             ) : null}
-          </article>
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   )
 }
@@ -263,17 +288,25 @@ export function ContactCta() {
 
   return (
     <section className="section-divider gutter py-14 md:py-20">
-      <div className="rounded-2xl border border-line bg-soft px-6 py-12 text-center sm:px-12">
+      <Reveal className="relative overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-soft via-surface to-accent-soft/40 px-6 py-12 text-center shadow-lift sm:px-12">
+        <div
+          className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-accent/10 blur-[80px]"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-teal/10 blur-[80px]"
+          aria-hidden="true"
+        />
         <h2
-          className="mx-auto max-w-2xl font-display font-semibold tracking-[-0.02em]"
+          className="relative mx-auto max-w-2xl font-display font-semibold tracking-[-0.02em]"
           style={{ fontSize: 'clamp(1.625rem, 3.6vw, 2.5rem)' }}
         >
           Have something you want built?
         </h2>
-        <p className="prose-body mx-auto mt-4 text-center">
+        <p className="prose-body relative mx-auto mt-4 text-center">
           {settings.contact.form_note || 'Tell me what you are working on and I will get back to you.'}
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <div className="relative mt-8 flex flex-wrap justify-center gap-3">
           <LinkButton to="/contact">
             Start a conversation
             <Icon name="arrow-right" className="h-4 w-4" />
@@ -285,7 +318,7 @@ export function ContactCta() {
             </LinkButton>
           ) : null}
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }

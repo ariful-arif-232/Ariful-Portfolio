@@ -3,7 +3,7 @@ import { paragraphs, resolveMedia } from '../lib/utils'
 import { Icon, LinkButton } from '../components/ui'
 import { EducationSection, ExperienceSection, ContactCta } from '../components/home/Sections'
 import { Seo } from '../components/layout/Seo'
-import { GridRules } from '../components/layout/PublicLayout'
+import { GridRules, HeaderBackdrop } from '../components/layout/PublicLayout'
 
 export default function About() {
   const { settings } = useSite()
@@ -20,9 +20,13 @@ export default function About() {
       />
 
       <section className="relative overflow-hidden">
+        <HeaderBackdrop />
         <GridRules />
         <div className="gutter relative py-12 md:py-16">
-          <p className="eyebrow">About</p>
+          <p className="eyebrow flex items-center gap-2 font-medium">
+            <span className="h-px w-8 bg-gradient-to-r from-accent to-transparent" aria-hidden="true" />
+            About
+          </p>
           <h1
             className="mt-3 max-w-3xl font-display font-bold leading-[1.05] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2.25rem, 6vw, 3.75rem)' }}

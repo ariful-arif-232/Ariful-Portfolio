@@ -55,6 +55,14 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden" aria-label="Introduction">
+      {/* Layered backdrop: dot grid + soft brand-colored glows, decorative only */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute inset-0 bg-dot-grid opacity-[0.35]" />
+        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-accent/15 blur-[90px]" />
+        <div className="absolute -right-16 top-1/3 h-80 w-80 rounded-full bg-teal/15 blur-[100px]" />
+        <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-white via-white/60 to-transparent" />
+      </div>
+
       {showVideo ? (
         <div className="absolute inset-0" aria-hidden="true">
           <video
@@ -101,14 +109,19 @@ export function Hero() {
             </p>
           ) : null}
 
-          {hero.greeting ? <p className="eyebrow">{hero.greeting}</p> : null}
+          {hero.greeting ? (
+            <p className="eyebrow flex items-center gap-2 font-medium">
+              <span className="h-px w-8 bg-gradient-to-r from-accent to-transparent" aria-hidden="true" />
+              {hero.greeting}
+            </p>
+          ) : null}
 
           <h1
-            className="mt-2 font-display font-bold leading-[0.94] tracking-[-0.035em]"
+            className="mt-3 font-display font-bold leading-[0.94] tracking-[-0.035em]"
             style={{ fontSize: 'clamp(2.75rem, 9vw, 5.25rem)' }}
           >
             {hero.name}
-            <span className="text-accent">.</span>
+            <span className="bg-gradient-to-r from-accent to-teal bg-clip-text text-transparent">.</span>
           </h1>
 
           {hero.title ? (
@@ -168,7 +181,24 @@ export function Hero() {
           <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
             {/* Soft halo grounds the cut-out portrait without a hard image frame */}
             <div
-              className="absolute inset-x-[8%] bottom-[6%] top-[10%] rounded-[999px] bg-gradient-to-b from-[#eef2f8] to-transparent blur-2xl"
+              className="absolute inset-x-[8%] bottom-[6%] top-[10%] rounded-[999px] bg-gradient-to-b from-accent-soft to-transparent blur-2xl"
+              aria-hidden="true"
+            />
+            {/* Brand-colored glow ring behind the portrait, plus an abstract corner shape */}
+            <div
+              className="absolute inset-x-[14%] bottom-[2%] top-[16%] -z-10 rounded-[40%] bg-gradient-to-br from-accent/25 via-teal/15 to-transparent blur-3xl"
+              aria-hidden="true"
+            />
+            <svg
+              className="pointer-events-none absolute -right-6 -top-6 -z-10 hidden h-28 w-28 text-accent/25 sm:block"
+              viewBox="0 0 100 100"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect x="0.5" y="0.5" width="99" height="99" rx="24" stroke="currentColor" strokeDasharray="4 6" />
+            </svg>
+            <span
+              className="absolute -bottom-3 left-[6%] -z-10 h-16 w-16 rounded-2xl border border-ember/25 bg-ember/5 sm:h-20 sm:w-20"
               aria-hidden="true"
             />
 
@@ -187,11 +217,19 @@ export function Hero() {
             {heroLabels.map((label, i) => (
               <motion.span
                 key={label.id}
-                initial={reduceMotion ? undefined : { opacity: 0, scale: 0.94 }}
-                animate={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-                transition={{ duration: 0.35, delay: 0.35 + i * 0.09 }}
+                initial={reduceMotion ? undefined : { opacity: 0, scale: 0.94, y: 0 }}
+                animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: [0, -6, 0] }}
+                transition={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        opacity: { duration: 0.35, delay: 0.35 + i * 0.09 },
+                        scale: { duration: 0.35, delay: 0.35 + i * 0.09 },
+                        y: { duration: 3.4 + i * 0.4, repeat: Infinity, ease: 'easeInOut', delay: 0.7 + i * 0.09 },
+                      }
+                }
                 className={cn(
-                  'absolute z-10 rounded-lg bg-ink px-3 py-1.5 text-[0.75rem] font-medium text-white shadow-lift sm:text-[0.8125rem]',
+                  'absolute z-10 rounded-full border border-white/40 bg-ink/90 px-3.5 py-1.5 text-[0.75rem] font-medium text-white shadow-lift backdrop-blur-sm sm:text-[0.8125rem]',
                   LABEL_PLACEMENT[label.position] ?? LABEL_PLACEMENT['top-left'],
                 )}
               >

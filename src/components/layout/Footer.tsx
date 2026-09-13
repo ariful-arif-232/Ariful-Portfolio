@@ -8,10 +8,13 @@ export function Footer() {
   const name = settings.general.site_name || settings.hero.name || 'Portfolio'
 
   return (
-    <footer className="section-divider gutter py-12">
+    <footer className="section-divider gutter py-10">
       <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
         <div className="max-w-sm">
-          <p className="font-display text-lg font-semibold">{name}</p>
+          <p className="flex items-center gap-2 font-display text-lg font-semibold">
+            {name}
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+          </p>
           {settings.about.short_bio ? (
             <p className="mt-2 text-[0.9375rem] leading-relaxed text-subtle">
               {settings.about.short_bio}
@@ -26,7 +29,7 @@ export function Footer() {
                   target="_blank"
                   rel="noreferrer noopener"
                   aria-label={s.platform}
-                  className="rounded-xl border border-line p-2.5 text-subtle transition-colors duration-200 hover:border-[#cdd5e0] hover:text-ink"
+                  className="rounded-xl border border-line p-2.5 text-subtle transition-colors duration-200 hover:border-accent/30 hover:bg-accent-soft hover:text-accent"
                 >
                   <Icon name={socialIcon(s.platform)} />
                 </a>
@@ -68,7 +71,6 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-medium text-ink">Site</p>
             <ul className="space-y-2 text-[0.9375rem] text-subtle">
               <li><Link to="/admin" className="hover:text-ink">Admin</Link></li>
             </ul>
