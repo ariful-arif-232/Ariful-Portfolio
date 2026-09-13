@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --outer-bg: #e9edf2;
+    --accent: #2563eb;
+    --micro-accent: #ff6b4a;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    background-color: var(--outer-bg);
+    /* Stops long words and URLs from forcing horizontal scroll on 320px screens */
+    overflow-wrap: break-word;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display text-ink;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, consistent keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: #dbe5ff;
+    color: #0f172a;
+  }
+
+  /* Slimmer scrollbar for admin panes */
+  .thin-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+  .thin-scroll::-webkit-scrollbar-thumb { background: #d6dbe3; border-radius: 99px; }
+}
+
+@layer components {
+  /* The white editorial container the whole page sits inside */
+  .shell {
+    @apply mx-auto w-full max-w-shell bg-surface;
+    @apply rounded-none sm:rounded-shell shadow-shell;
+  }
+
+  .gutter {
+    @apply px-5 sm:px-8 lg:px-14;
+  }
+
+  .section-divider {
+    @apply border-t border-line;
+  }
+
+  /* Thin vertical rules that give the layout its editorial rhythm.
+     Decorative only, and hidden below lg where they would crowd the content. */
+  .grid-rules {
+    @apply pointer-events-none absolute inset-0 hidden lg:block;
+  }
+  .grid-rules span {
+    @apply absolute top-0 bottom-0 w-px bg-line;
+  }
+
+  .eyebrow {
+    @apply text-sm font-medium text-subtle;
+  }
+
+  .link-underline {
+    @apply relative text-ink transition-colors duration-200;
+  }
+
+  .prose-body {
+    @apply text-[1.0625rem] leading-[1.75] text-subtle;
+    max-width: 68ch;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+
+  .card-hover {
+    @apply transition duration-300 ease-out hover:border-[#d5dce7] hover:shadow-lift;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-line bg-soft px-3 py-1 text-[0.8125rem] text-subtle;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[0.9375rem] text-ink;
+    @apply placeholder:text-[#9aa4b2] transition-colors duration-200;
+    @apply focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10;
+  }
+
+  .input-error {
+    @apply border-[#e11d48] focus:border-[#e11d48] focus:ring-[#e11d48]/10;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  /* Fades the bottom of the hero portrait into the white container so the
+     photo reads as part of the page rather than a pasted rectangle. */
+  .portrait-fade {
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 99%);
+    mask-image: linear-gradient(to bottom, #000 72%, transparent 99%);
+  }
+}
+
+/* Respect the OS reduced-motion setting: kill transforms and autoplay motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

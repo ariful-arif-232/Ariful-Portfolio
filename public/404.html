@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <script>
+      // GitHub Pages has no server-side rewrite. Stash the requested route,
+      // then bounce to the app shell, which restores it on boot.
+      (function () {
+        var segments = location.pathname.split('/')
+        // On a project site the first segment is the repo name and must be kept.
+        var base = '/'
+        if (segments.length > 2 && segments[1] !== '') base = '/' + segments[1] + '/'
+        sessionStorage.setItem('spa:redirect', location.pathname + location.search + location.hash)
+        location.replace(base)
+      })()
+    </script>
+  </head>
+  <body></body>
+</html>
