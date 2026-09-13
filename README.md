@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Portfolio CMS
 
 A personal portfolio site where every visible piece of content is editable from an
@@ -124,3 +125,6 @@ npm run typecheck  # tsc, no emit
 npm run build      # production build to dist/
 npm run preview    # serve the build locally
 ```
+=======
+# Ariful-Portfolio
+>>>>>>> b7507e1202c210e11ea1ff6877f826d06e0416f5
