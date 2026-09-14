@@ -9,6 +9,7 @@ import {
   FocusAreas,
   ServicesSection,
   SkillsSection,
+  Snapshot,
 } from '../components/home/Sections'
 import { ProjectCard } from '../components/projects/ProjectCard'
 import { useProjects } from '../hooks/useContent'
@@ -69,6 +70,7 @@ export default function Home() {
       <ServicesSection />
       <ExperienceSection />
       <EducationSection />
+      <Snapshot />
       <ContactCta />
     </>
   )
