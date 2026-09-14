@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#E9EDF2" />
+    <meta name="theme-color" content="#FBEDE1" />
+    <!-- The JS/CSS assets Vite emits are content-hashed and cache forever,
+         but this shell file is not — without this, some mobile browsers keep
+         serving a stale index.html (referencing an old asset hash) for a
+         while after a new deploy, which looks like the site "reverted". -->
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

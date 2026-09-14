@@ -36,13 +36,13 @@ export default function ProjectDetail() {
   if (!project) {
     return (
       <section className="gutter py-20">
-        <Seo title="Project not found" noIndex />
+        <Seo title="Not found" noIndex />
         <EmptyState
-          title="That project is not here"
+          title="That portfolio piece is not here"
           description="It may have been unpublished or the link is out of date."
           action={
             <LinkButton to="/projects" variant="secondary" size="sm">
-              Back to projects
+              Back to portfolio
             </LinkButton>
           }
         />
@@ -73,7 +73,7 @@ export default function ProjectDetail() {
             className="inline-flex items-center gap-1.5 text-[0.875rem] text-subtle hover:text-ink"
           >
             <Icon name="arrow-right" className="h-4 w-4 rotate-180" />
-            All projects
+            Back to portfolio
           </Link>
 
           <div className="mt-6 flex flex-wrap items-center gap-2">

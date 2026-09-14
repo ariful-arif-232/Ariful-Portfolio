@@ -44,7 +44,7 @@ export function Footer() {
             <ul className="space-y-2 text-[0.9375rem] text-subtle">
               <li><Link to="/" className="hover:text-ink">Home</Link></li>
               <li><Link to="/about" className="hover:text-ink">About</Link></li>
-              <li><Link to="/projects" className="hover:text-ink">Projects</Link></li>
+              <li><Link to="/projects" className="hover:text-ink">Portfolio</Link></li>
               <li><Link to="/contact" className="hover:text-ink">Contact</Link></li>
             </ul>
           </nav>

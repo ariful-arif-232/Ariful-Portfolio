@@ -8,7 +8,7 @@ import { Icon, socialIcon } from '../ui'
 const LINKS = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
-  { label: 'Projects', to: '/projects' },
+  { label: 'Portfolio', to: '/projects' },
   { label: 'Skills', to: '/#skills' },
   { label: 'Contact', to: '/contact' },
 ]
