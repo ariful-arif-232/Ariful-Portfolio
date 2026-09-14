@@ -1,11 +1,40 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useProjects } from '../hooks/useContent'
 import { ProjectCard } from '../components/projects/ProjectCard'
-import { EmptyState, ErrorNote, Icon, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
+import { EmptyState, ErrorNote, Icon, SectionLoader } from '../components/ui'
 import { Seo } from '../components/layout/Seo'
 import { GridRules, HeaderBackdrop } from '../components/layout/PublicLayout'
 import { cn } from '../lib/utils'
+import type { Project } from '../lib/types'
+
+/**
+ * Plain mount-time fade-in, deliberately NOT using framer-motion's
+ * `whileInView`. This grid is reached by clicking a category filter or a
+ * "Where I focus" card, so it must always be visible the instant it mounts —
+ * gating it on an IntersectionObserver risks it staying invisible if the
+ * observer's first check ever misfires (seen in the wild on some mobile
+ * browsers right after a route change).
+ */
+function ProjectGrid({ projects }: { projects: Project[] }) {
+  const reduceMotion = useReducedMotion()
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project, i) => (
+        <motion.div
+          key={project.id}
+          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: reduceMotion ? 0 : Math.min(i, 6) * 0.05, ease: [0.22, 1, 0.36, 1] }}
+          className={i === 0 ? 'sm:col-span-2 lg:col-span-1' : undefined}
+        >
+          <ProjectCard project={project} />
+        </motion.div>
+      ))}
+    </div>
+  )
+}
 
 export default function Projects() {
   const { data: projects, loading, error } = useProjects()
@@ -131,18 +160,7 @@ export default function Projects() {
             />
           ) : null}
 
-          {visible.length ? (
-            <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {visible.map((project, i) => (
-                <RevealItem
-                  key={project.id}
-                  className={i === 0 ? 'sm:col-span-2 lg:col-span-1' : undefined}
-                >
-                  <ProjectCard project={project} />
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          ) : null}
+          {visible.length ? <ProjectGrid projects={visible} /> : null}
         </div>
       </section>
     </>
