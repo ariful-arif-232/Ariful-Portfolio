@@ -524,7 +524,7 @@ export type IconName =
   | 'facebook' | 'instagram' | 'twitter' | 'youtube' | 'whatsapp' | 'mail' | 'link'
   | 'download' | 'close' | 'menu' | 'check' | 'plus' | 'edit' | 'trash' | 'search'
   | 'code' | 'layout' | 'database' | 'settings' | 'image' | 'message' | 'grid'
-  | 'briefcase' | 'graduation' | 'spark' | 'logout' | 'eye' | 'pin' | 'phone' | 'calendar' | 'cpu' | 'palette'
+  | 'briefcase' | 'graduation' | 'spark' | 'logout' | 'eye' | 'pin' | 'phone' | 'calendar' | 'cpu' | 'palette' | 'trend'
 
 const PATHS: Record<IconName, string> = {
   'arrow-right': 'M5 12h14M13 6l6 6-6 6',
@@ -567,6 +567,7 @@ const PATHS: Record<IconName, string> = {
   spark: 'M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3z',
   logout: 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
   eye: 'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  trend: 'M3 17l6-6 4 4 8-8M21 7v5M21 7h-5',
   pin: 'M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11zM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
   phone:
     'M21 16.9v2.6a2 2 0 0 1-2.2 2 19.6 19.6 0 0 1-8.5-3 19.3 19.3 0 0 1-6-6 19.6 19.6 0 0 1-3-8.6A2 2 0 0 1 3.3 2H6a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.7a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z',
