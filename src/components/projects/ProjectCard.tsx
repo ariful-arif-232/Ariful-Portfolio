@@ -45,7 +45,7 @@ export function ProjectCard({ project }: { project: Project }) {
             />
           ) : (
             // No image yet: a quiet typographic placeholder beats a broken frame
-            <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#f1f5f9] to-[#e6ebf2] font-display text-3xl font-semibold text-[#c3cbd7]">
+            <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#fff1e2] to-[#fbe1cc] font-display text-3xl font-semibold text-[#e0b592]">
               {project.title.charAt(0).toUpperCase()}
             </span>
           )}
@@ -87,7 +87,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 </li>
               ))}
               {project.technologies.length > 5 ? (
-                <li className="rounded-md px-2 py-1 text-[0.75rem] text-[#98a2b3]">
+                <li className="rounded-md px-2 py-1 text-[0.75rem] text-[#a89a8c]">
                   +{project.technologies.length - 5}
                 </li>
               ) : null}

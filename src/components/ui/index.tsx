@@ -355,7 +355,7 @@ export function Badge({
 }) {
   const tones = {
     neutral: 'bg-soft text-subtle border-line',
-    accent: 'bg-accent-soft text-accent border-[#d5e2ff]',
+    accent: 'bg-accent-soft text-accent border-[#ffd2bd]',
     live: 'bg-[#ecfdf3] text-[#027a48] border-[#c7f0d8]',
     warn: 'bg-[#fff6ed] text-[#b93815] border-[#ffdcc2]',
   } as const
@@ -524,7 +524,7 @@ export type IconName =
   | 'facebook' | 'instagram' | 'twitter' | 'youtube' | 'whatsapp' | 'mail' | 'link'
   | 'download' | 'close' | 'menu' | 'check' | 'plus' | 'edit' | 'trash' | 'search'
   | 'code' | 'layout' | 'database' | 'settings' | 'image' | 'message' | 'grid'
-  | 'briefcase' | 'graduation' | 'spark' | 'logout' | 'eye' | 'pin' | 'phone' | 'calendar'
+  | 'briefcase' | 'graduation' | 'spark' | 'logout' | 'eye' | 'pin' | 'phone' | 'calendar' | 'cpu' | 'palette'
 
 const PATHS: Record<IconName, string> = {
   'arrow-right': 'M5 12h14M13 6l6 6-6 6',
@@ -571,6 +571,9 @@ const PATHS: Record<IconName, string> = {
   phone:
     'M21 16.9v2.6a2 2 0 0 1-2.2 2 19.6 19.6 0 0 1-8.5-3 19.3 19.3 0 0 1-6-6 19.6 19.6 0 0 1-3-8.6A2 2 0 0 1 3.3 2H6a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L7.1 9.7a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z',
   calendar: 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7zM3 11h18M8 3v4M16 3v4',
+  cpu: 'M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z',
+  palette:
+    'M12 3a9 9 0 1 0 0 18c1.1 0 2-.7 2-2 0-.5-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.3 0-1 .8-1.8 1.8-1.8H16a5 5 0 0 0 5-5c0-3.9-4-6.5-9-6.5zM6.5 12a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM9 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM15 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM17.5 12a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z',
 }
 
 export function Icon({

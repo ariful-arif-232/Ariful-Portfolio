@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    --outer-bg: #e9edf2;
-    --accent: #4169e1;
-    --accent-deep: #2746b8;
-    --micro-accent: #ff715b;
-    --teal-accent: #14b8a6;
+    --outer-bg: #fbede1;
+    --accent: #ff5a36;
+    --accent-deep: #d93f1e;
+    --micro-accent: #ffb020;
+    --teal-accent: #ffc94d;
     --surface-bg: #ffffff;
-    --soft-bg: #f8fafc;
+    --soft-bg: #fff4e8;
 
     /* RGB triples of the colors above, for Tailwind's rgb(var(--x) / <alpha>) opacity syntax */
-    --accent-rgb: 65 105 225;
-    --accent-deep-rgb: 39 70 184;
-    --micro-accent-rgb: 255 113 91;
-    --teal-accent-rgb: 20 184 166;
+    --accent-rgb: 255 90 54;
+    --accent-deep-rgb: 217 63 30;
+    --micro-accent-rgb: 255 176 32;
+    --teal-accent-rgb: 255 201 77;
   }
 
   * {
@@ -52,13 +52,13 @@
   }
 
   ::selection {
-    background: #dbe5ff;
-    color: #0f172a;
+    background: #ffdcc4;
+    color: #241c15;
   }
 
   /* Slimmer scrollbar for admin panes */
   .thin-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
-  .thin-scroll::-webkit-scrollbar-thumb { background: #d6dbe3; border-radius: 99px; }
+  .thin-scroll::-webkit-scrollbar-thumb { background: #e8d7c5; border-radius: 99px; }
 }
 
 @layer components {
@@ -103,7 +103,7 @@
   }
 
   .card-hover {
-    @apply transition duration-300 ease-out hover:-translate-y-1 hover:border-[#d5dce7] hover:shadow-lift;
+    @apply transition duration-300 ease-out hover:-translate-y-1 hover:border-[#ecd5bd] hover:shadow-lift;
   }
 
   /* Premium primary CTA: gradient fill with a soft brand-colored glow */
@@ -117,7 +117,7 @@
 
   /* Faint dot-grid used behind hero/section backgrounds for texture */
   .bg-dot-grid {
-    background-image: radial-gradient(circle at 1px 1px, rgba(17, 24, 39, 0.08) 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, rgba(36, 28, 21, 0.09) 1px, transparent 0);
     background-size: 22px 22px;
   }
 
@@ -131,7 +131,7 @@
 
   .input {
     @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[0.9375rem] text-ink;
-    @apply placeholder:text-[#9aa4b2] transition-colors duration-200;
+    @apply placeholder:text-[#a89a8c] transition-colors duration-200;
     @apply focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10;
   }
 

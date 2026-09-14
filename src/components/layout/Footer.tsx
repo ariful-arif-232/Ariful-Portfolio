@@ -38,7 +38,7 @@ export function Footer() {
           ) : null}
         </div>
 
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:gap-16">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:gap-16">
           <nav aria-label="Footer">
             <p className="mb-3 text-sm font-medium text-ink">Pages</p>
             <ul className="space-y-2 text-[0.9375rem] text-subtle">
@@ -67,12 +67,6 @@ export function Footer() {
                 </li>
               ) : null}
               {settings.contact.location ? <li>{settings.contact.location}</li> : null}
-            </ul>
-          </div>
-
-          <div>
-            <ul className="space-y-2 text-[0.9375rem] text-subtle">
-              <li><Link to="/admin" className="hover:text-ink">Admin</Link></li>
             </ul>
           </div>
         </div>
