@@ -6,13 +6,17 @@
     <script>
       // GitHub Pages has no server-side rewrite. Stash the requested route,
       // then bounce to the app shell, which restores it on boot.
+      //
+      // This site always deploys at the domain root (see deploy.yml's
+      // VITE_BASE_PATH), custom domain included, so the app shell always
+      // lives at '/'. A path-segment-counting heuristic here previously
+      // mis-detected any nested route (e.g. /projects/some-slug) as a
+      // GitHub Pages *project* site and redirected to '/projects/' instead
+      // of '/' — which itself 404s, bouncing forever and showing a blank
+      // white page instead of the app.
       (function () {
-        var segments = location.pathname.split('/')
-        // On a project site the first segment is the repo name and must be kept.
-        var base = '/'
-        if (segments.length > 2 && segments[1] !== '') base = '/' + segments[1] + '/'
         sessionStorage.setItem('spa:redirect', location.pathname + location.search + location.hash)
-        location.replace(base)
+        location.replace('/')
       })()
     </script>
   </head>
