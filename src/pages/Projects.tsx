@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useProjects } from '../hooks/useContent'
 import { ProjectCard } from '../components/projects/ProjectCard'
 import { EmptyState, ErrorNote, Icon, RevealGroup, RevealItem, SectionLoader } from '../components/ui'
@@ -66,12 +67,19 @@ export default function Projects() {
                 onClick={() => setCategory(c)}
                 aria-pressed={category === c}
                 className={cn(
-                  'shrink-0 rounded-full border px-4 py-2 text-[0.875rem] transition-all duration-200',
+                  'relative shrink-0 rounded-full border px-4 py-2 text-[0.875rem] transition-colors duration-200',
                   category === c
-                    ? 'border-transparent bg-gradient-to-b from-accent to-accent-deep text-white shadow-glow'
+                    ? 'border-transparent text-white'
                     : 'border-line bg-surface text-subtle hover:border-accent/30 hover:text-ink',
                 )}
               >
+                {category === c ? (
+                  <motion.span
+                    layoutId="category-pill"
+                    className="absolute inset-0 -z-10 rounded-full bg-gradient-to-b from-accent to-accent-deep shadow-glow"
+                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  />
+                ) : null}
                 {c}
               </button>
             ))}

@@ -1,7 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'framer-motion'
 import { Navbar } from './Navbar'
 import { Footer } from './Footer'
+import { CursorGlow } from './CursorGlow'
+import { Icon } from '../ui'
 import { useSite } from '../../hooks/useSiteData'
 import { hexToRgbTriple } from '../../lib/utils'
 
@@ -20,9 +23,87 @@ function useRouteScroll() {
   }, [pathname, hash])
 }
 
+/** Fades/lifts each route's content in and out on navigation. */
+function RouteTransition() {
+  const { pathname } = useLocation()
+  const reduceMotion = useReducedMotion()
+
+  if (reduceMotion) return <Outlet />
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <Outlet />
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+/** Floating scroll-to-top button, its ring tracing overall scroll progress. */
+function ScrollTopButton() {
+  const reduceMotion = useReducedMotion()
+  const [visible, setVisible] = useState(false)
+  const { scrollYProgress } = useScroll()
+  const pathLength = useSpring(scrollYProgress, { stiffness: 120, damping: 26, restDelta: 0.001 })
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 480)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <motion.button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })}
+          initial={{ opacity: 0, scale: 0.7, y: 10 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.7, y: 10 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          aria-label="Scroll to top"
+          className="fixed bottom-5 right-5 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-line bg-surface/90 text-ink shadow-lift backdrop-blur-md transition-colors hover:border-accent/40 hover:text-accent sm:bottom-8 sm:right-8"
+        >
+          <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" strokeOpacity="0.12" strokeWidth="2.5" />
+            {reduceMotion ? null : (
+              <motion.circle
+                cx="24"
+                cy="24"
+                r="21"
+                fill="none"
+                stroke="url(#scroll-top-gradient)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                style={{ pathLength }}
+              />
+            )}
+            <defs>
+              <linearGradient id="scroll-top-gradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="rgb(var(--accent-rgb))" />
+                <stop offset="100%" stopColor="rgb(var(--teal-accent-rgb))" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <Icon name="arrow-up" className="h-4 w-4" />
+        </motion.button>
+      ) : null}
+    </AnimatePresence>
+  )
+}
+
 export function PublicLayout() {
   useRouteScroll()
   const { settings } = useSite()
+  const shellRef = useRef<HTMLDivElement>(null)
 
   // Theme colours are editable from Admin > Settings > Theme.
   useEffect(() => {
@@ -53,13 +134,15 @@ export function PublicLayout() {
       >
         Skip to content
       </a>
-      <div className="shell overflow-hidden">
+      <div ref={shellRef} className="shell relative overflow-hidden">
+        <CursorGlow containerRef={shellRef} />
         <Navbar />
         <main id="main">
-          <Outlet />
+          <RouteTransition />
         </main>
         <Footer />
       </div>
+      <ScrollTopButton />
     </div>
   )
 }

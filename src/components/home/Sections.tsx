@@ -353,13 +353,20 @@ export function ContactCta() {
         {/* Dark, single-focus closer — deliberately the boldest moment on the page */}
         <div className="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.08] invert" aria-hidden="true" />
         <div
-          className="pointer-events-none absolute left-1/2 top-0 h-72 w-96 -translate-x-1/2 -translate-y-1/3 rounded-full bg-accent/40 blur-[110px]"
+          className="pointer-events-none absolute left-1/2 top-0 h-72 w-96 -translate-x-1/2 -translate-y-1/3"
           aria-hidden="true"
-        />
+        >
+          <div className="h-full w-full rounded-full bg-accent/40 blur-[110px] motion-safe:animate-blob-float" />
+        </div>
         <div
-          className="pointer-events-none absolute bottom-0 right-0 h-56 w-56 translate-x-1/4 translate-y-1/4 rounded-full bg-teal/30 blur-[100px]"
+          className="pointer-events-none absolute bottom-0 right-0 h-56 w-56 translate-x-1/4 translate-y-1/4"
           aria-hidden="true"
-        />
+        >
+          <div
+            className="h-full w-full rounded-full bg-teal/30 blur-[100px] motion-safe:animate-blob-float"
+            style={{ animationDelay: '-4.5s' }}
+          />
+        </div>
         <motion.span
           aria-hidden="true"
           className="pointer-events-none absolute right-[8%] top-[14%] hidden h-14 w-14 rounded-2xl border border-white/15 sm:block"

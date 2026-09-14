@@ -45,9 +45,19 @@ export default {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'blob-float': {
+          '0%, 100%': { transform: 'scale(1) translateY(0)' },
+          '50%': { transform: 'scale(1.08) translateY(-14px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
       },
       animation: {
         marquee: 'marquee 26s linear infinite',
+        'blob-float': 'blob-float 9s ease-in-out infinite',
+        shimmer: 'shimmer 3.2s linear infinite',
       },
     },
   },

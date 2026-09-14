@@ -22,7 +22,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <TiltCard max={5} className="h-full">
-      <article className="card card-hover group flex h-full flex-col overflow-hidden">
+      <article className="card card-hover group relative flex h-full flex-col overflow-hidden transition-shadow duration-300 hover:shadow-[0_0_0_1px_rgb(var(--accent-rgb)/0.18),0_28px_70px_-24px_rgb(var(--accent-rgb)/0.38)]">
         {/* Quiet browser-window chrome — frames every screenshot like a real tab */}
         <div className="flex items-center gap-2 border-b border-line bg-soft px-3.5 py-2" aria-hidden="true">
           <span className="h-1.5 w-1.5 rounded-full bg-ember/60" />
@@ -52,6 +52,11 @@ export function ProjectCard({ project }: { project: Project }) {
           <div
             className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             aria-hidden="true"
+          />
+          {/* Diagonal light sweep across the thumbnail on hover */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/60 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:left-[130%] group-hover:opacity-100"
           />
         </Link>
 
