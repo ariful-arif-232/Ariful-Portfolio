@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useSite } from '../../hooks/useSiteData'
-import { useEducation, useExperiences, useServices, useSkills } from '../../hooks/useContent'
+import { useEducation, useExperiences, useProjects, useServices, useSkills } from '../../hooks/useContent'
 import { cn, dateRange, paragraphs, resolveMedia } from '../../lib/utils'
 import {
   Badge,
@@ -438,6 +438,41 @@ export function EducationSection() {
           </RevealItem>
         ))}
       </RevealGroup>
+    </section>
+  )
+}
+
+/* -------------------------------- Snapshot -------------------------------- */
+
+/** A quick, real-numbers strip — no invented claims, just counts of what's on the site. */
+export function Snapshot() {
+  const { settings } = useSite()
+  const { data: projects, loading: projectsLoading } = useProjects()
+  const { data: skills, loading: skillsLoading } = useSkills()
+
+  if (projectsLoading || skillsLoading) return null
+  if (!projects.length && !skills.length) return null
+
+  const stats = [
+    { value: `${projects.length}+`, label: 'Portfolio pieces shipped' },
+    { value: settings.about.experience_years ? `${settings.about.experience_years}+` : '—', label: 'Years of experience' },
+    { value: '3', label: 'Focus areas — AI, Web, Design' },
+    { value: `${skills.length}+`, label: 'Skills & tools' },
+  ]
+
+  return (
+    <section className="section-divider gutter py-14 md:py-16">
+      <Reveal
+        as="article"
+        className="grid grid-cols-2 gap-6 rounded-[2rem] border border-line bg-gradient-to-br from-accent-soft via-surface to-teal-soft p-8 sm:grid-cols-4 sm:gap-4 sm:p-10"
+      >
+        {stats.map((s) => (
+          <div key={s.label} className="text-center">
+            <p className="font-display text-3xl font-bold text-accent sm:text-4xl">{s.value}</p>
+            <p className="mt-1.5 text-[0.8125rem] leading-snug text-subtle sm:text-sm">{s.label}</p>
+          </div>
+        ))}
+      </Reveal>
     </section>
   )
 }
