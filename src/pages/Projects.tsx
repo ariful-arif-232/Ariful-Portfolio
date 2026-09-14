@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useProjects } from '../hooks/useContent'
 import { ProjectCard } from '../components/projects/ProjectCard'
@@ -9,8 +10,21 @@ import { cn } from '../lib/utils'
 
 export default function Projects() {
   const { data: projects, loading, error } = useProjects()
-  const [category, setCategory] = useState('All')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [category, setCategory] = useState(() => searchParams.get('category') || 'All')
   const [query, setQuery] = useState('')
+
+  // A "Focus areas" card on the home page links here with ?category=…; keep
+  // the filter in sync if that param changes (e.g. back/forward navigation).
+  useEffect(() => {
+    const fromUrl = searchParams.get('category')
+    if (fromUrl && fromUrl !== category) setCategory(fromUrl)
+  }, [searchParams]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function selectCategory(next: string) {
+    setCategory(next)
+    setSearchParams(next === 'All' ? {} : { category: next }, { replace: true })
+  }
 
   const categories = useMemo(() => {
     const set = new Set(projects.map((p) => p.category).filter(Boolean))
@@ -64,7 +78,7 @@ export default function Projects() {
             {categories.map((c) => (
               <button
                 key={c}
-                onClick={() => setCategory(c)}
+                onClick={() => selectCategory(c)}
                 aria-pressed={category === c}
                 className={cn(
                   'relative shrink-0 rounded-full border px-4 py-2 text-[0.875rem] transition-colors duration-200',

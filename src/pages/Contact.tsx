@@ -255,7 +255,7 @@ export default function Contact() {
                       href={s.url}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-[0.875rem] text-subtle transition-colors hover:border-[#cdd5e0] hover:text-ink"
+                      className="inline-flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-[0.875rem] text-subtle transition-colors hover:border-[#e0c9ae] hover:text-ink"
                     >
                       <Icon name={socialIcon(s.platform)} className="h-4 w-4" />
                       {s.platform}

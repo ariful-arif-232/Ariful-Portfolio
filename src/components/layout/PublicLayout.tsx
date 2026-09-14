@@ -109,21 +109,21 @@ export function PublicLayout() {
   useEffect(() => {
     const root = document.documentElement
     const theme = settings.theme
-    const accent = theme.accent || '#4169E1'
-    const accentDeep = theme.secondary_accent || '#2746B8'
-    const microAccent = theme.micro_accent || '#FF715B'
+    const accent = theme.accent || '#FF5A36'
+    const accentDeep = theme.secondary_accent || '#D93F1E'
+    const microAccent = theme.micro_accent || '#FFB020'
 
-    root.style.setProperty('--outer-bg', theme.outer_bg || '#E9EDF2')
+    root.style.setProperty('--outer-bg', theme.outer_bg || '#FBEDE1')
     root.style.setProperty('--accent', accent)
     root.style.setProperty('--accent-deep', accentDeep)
     root.style.setProperty('--micro-accent', microAccent)
     root.style.setProperty('--surface-bg', theme.surface_bg || '#FFFFFF')
-    root.style.setProperty('--soft-bg', theme.soft_bg || '#F8FAFC')
+    root.style.setProperty('--soft-bg', theme.soft_bg || '#FFF4E8')
 
     // Tailwind's rgb(var(--x) / <alpha-value>) tokens need components, not hex
-    root.style.setProperty('--accent-rgb', hexToRgbTriple(accent, '65 105 225'))
-    root.style.setProperty('--accent-deep-rgb', hexToRgbTriple(accentDeep, '39 70 184'))
-    root.style.setProperty('--micro-accent-rgb', hexToRgbTriple(microAccent, '255 113 91'))
+    root.style.setProperty('--accent-rgb', hexToRgbTriple(accent, '255 90 54'))
+    root.style.setProperty('--accent-deep-rgb', hexToRgbTriple(accentDeep, '217 63 30'))
+    root.style.setProperty('--micro-accent-rgb', hexToRgbTriple(microAccent, '255 176 32'))
   }, [settings.theme])
 
   return (

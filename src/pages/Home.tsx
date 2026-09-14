@@ -6,6 +6,7 @@ import {
   ContactCta,
   EducationSection,
   ExperienceSection,
+  FocusAreas,
   ServicesSection,
   SkillsSection,
 } from '../components/home/Sections'
@@ -61,6 +62,7 @@ export default function Home() {
     <>
       <Seo />
       <Hero />
+      <FocusAreas />
       <AboutPreview />
       <SkillsSection />
       <FeaturedProjects />

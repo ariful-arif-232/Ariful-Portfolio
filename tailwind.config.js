@@ -4,22 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: '#E9EDF2',
+        canvas: '#FBEDE1',
         surface: 'var(--surface-bg, #FFFFFF)',
-        soft: 'var(--soft-bg, #F8FAFC)',
-        muted: '#F1F5F9',
-        ink: '#111827',
-        subtle: '#667085',
-        line: '#E8EBEF',
+        soft: 'var(--soft-bg, #FFF4E8)',
+        muted: '#FBEEE0',
+        ink: '#241C15',
+        subtle: '#7A6F63',
+        line: '#F0E1D1',
         accent: {
-          DEFAULT: 'rgb(var(--accent-rgb, 65 105 225) / <alpha-value>)',
-          soft: '#EEF2FF',
-          deep: 'rgb(var(--accent-deep-rgb, 39 70 184) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--accent-rgb, 255 90 54) / <alpha-value>)',
+          soft: '#FFE8DE',
+          deep: 'rgb(var(--accent-deep-rgb, 217 63 30) / <alpha-value>)',
         },
-        ember: 'rgb(var(--micro-accent-rgb, 255 113 91) / <alpha-value>)',
+        ember: 'rgb(var(--micro-accent-rgb, 255 176 32) / <alpha-value>)',
         teal: {
-          DEFAULT: 'rgb(var(--teal-accent-rgb, 20 184 166) / <alpha-value>)',
-          soft: '#ECFDF9',
+          DEFAULT: 'rgb(var(--teal-accent-rgb, 255 201 77) / <alpha-value>)',
+          soft: '#FFF6DE',
         },
       },
       fontFamily: {
@@ -31,8 +31,8 @@ export default {
       boxShadow: {
         shell: '0 1px 2px rgba(16,24,40,0.04), 0 24px 64px -32px rgba(16,24,40,0.18)',
         lift: '0 12px 32px -16px rgba(16,24,40,0.24)',
-        glow: '0 8px 30px -8px rgba(65,105,225,0.35)',
-        'glow-lg': '0 24px 60px -16px rgba(65,105,225,0.32)',
+        glow: '0 8px 30px -8px rgba(255,90,54,0.35)',
+        'glow-lg': '0 24px 60px -16px rgba(255,90,54,0.32)',
       },
       transitionTimingFunction: {
         out: 'cubic-bezier(0.22, 1, 0.36, 1)',

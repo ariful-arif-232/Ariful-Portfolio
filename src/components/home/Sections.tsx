@@ -1,8 +1,9 @@
 import { useMemo, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useSite } from '../../hooks/useSiteData'
 import { useEducation, useExperiences, useServices, useSkills } from '../../hooks/useContent'
-import { dateRange, paragraphs, resolveMedia } from '../../lib/utils'
+import { cn, dateRange, paragraphs, resolveMedia } from '../../lib/utils'
 import {
   Badge,
   contentIcon,
@@ -14,11 +15,91 @@ import {
   RevealItem,
   SectionLoader,
   TiltCard,
+  type IconName,
 } from '../ui'
 import { SectionHeading } from './SectionHeading'
 import type { SkillCategory } from '../../lib/types'
 
 const SKILL_ORDER: SkillCategory[] = ['Frontend', 'Backend', 'Database', 'Tools', 'Design', 'Other']
+
+/* ------------------------------- Focus areas ------------------------------ */
+
+const FOCUS_AREAS: Array<{
+  category: string
+  title: string
+  description: string
+  icon: IconName
+  tone: string
+}> = [
+  {
+    category: 'AI',
+    title: 'AI & Machine Learning',
+    description:
+      'Applied deep learning and computer vision research, trained and tested on real-world data instead of clean lab benchmarks.',
+    icon: 'cpu',
+    tone: 'from-accent to-accent-deep',
+  },
+  {
+    category: 'Web',
+    title: 'Web Development',
+    description:
+      'Full-stack products end to end — React front ends, Postgres-backed APIs and CMS-driven sites clients can actually update themselves.',
+    icon: 'code',
+    tone: 'from-ember to-accent',
+  },
+  {
+    category: 'Graphics Design',
+    title: 'Graphics Design',
+    description:
+      'Visual identity, UI mockups and brand design — the craft side of making something look as considered as it works.',
+    icon: 'palette',
+    tone: 'from-teal to-ember',
+  },
+]
+
+export function FocusAreas() {
+  return (
+    <section className="section-divider gutter py-14 md:py-20">
+      <Reveal>
+        <SectionHeading
+          title="Where I focus"
+          lead="Three areas I keep coming back to, each with its own body of work behind it."
+        />
+      </Reveal>
+
+      <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-3">
+        {FOCUS_AREAS.map((area) => (
+          <RevealItem key={area.category}>
+            <TiltCard max={6} className="h-full">
+              <Link
+                to={`/projects?category=${encodeURIComponent(area.category)}`}
+                className="card card-hover group flex h-full flex-col p-6 sm:p-7"
+              >
+                <span
+                  className={cn(
+                    'inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-glow',
+                    area.tone,
+                  )}
+                >
+                  <Icon name={area.icon} className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 font-display text-lg font-semibold">{area.title}</h3>
+                <p className="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-subtle">{area.description}</p>
+                <span className="mt-5 inline-flex items-center gap-1.5 text-[0.875rem] font-medium text-accent">
+                  Explore work
+                  <Icon
+                    name="arrow-right"
+                    className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                  />
+                </span>
+              </Link>
+            </TiltCard>
+          </RevealItem>
+        ))}
+      </RevealGroup>
+    </section>
+  )
+}
 
 /* ------------------------------ About preview ----------------------------- */
 
@@ -159,7 +240,7 @@ export function SkillsSection() {
                   {skill.icon ? <Icon name={contentIcon(skill.icon)} className="h-3.5 w-3.5" /> : null}
                   {skill.name}
                   {typeof skill.level === 'number' ? (
-                    <span className="text-[0.75rem] text-[#98a2b3]">{skill.level}%</span>
+                    <span className="text-[0.75rem] text-[#a89a8c]">{skill.level}%</span>
                   ) : null}
                 </li>
               ))}

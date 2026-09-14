@@ -233,11 +233,11 @@ export const SETTINGS_DEFAULTS: SettingsMap = {
   resume: { url: '', filename: '' },
   seo: { site_title: 'Portfolio', meta_description: '', keywords: '', og_image_url: '' },
   theme: {
-    outer_bg: '#E9EDF2',
-    accent: '#4169E1',
-    micro_accent: '#FF715B',
-    secondary_accent: '#2746B8',
+    outer_bg: '#FBEDE1',
+    accent: '#FF5A36',
+    micro_accent: '#FFB020',
+    secondary_accent: '#D93F1E',
     surface_bg: '#FFFFFF',
-    soft_bg: '#F8FAFC',
+    soft_bg: '#FFF4E8',
   },
 }
