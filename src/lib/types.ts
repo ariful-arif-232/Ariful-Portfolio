@@ -212,7 +212,7 @@ export const SETTINGS_DEFAULTS: SettingsMap = {
     intro: '',
     availability_text: '',
     availability_active: false,
-    cta_projects: 'View projects',
+    cta_projects: 'View portfolio',
     cta_contact: 'Contact me',
     cta_resume: 'Download resume',
     image_url: '',

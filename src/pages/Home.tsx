@@ -39,7 +39,7 @@ function FeaturedProjects() {
               to="/projects"
               className="group inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-ink hover:text-accent"
             >
-              All projects
+              Full portfolio
               <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </Link>
           }

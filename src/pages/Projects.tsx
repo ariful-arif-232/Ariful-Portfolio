@@ -52,7 +52,7 @@ export default function Projects() {
 
   return (
     <>
-      <Seo title="Projects" description="Selected work, side projects and research." />
+      <Seo title="Portfolio" description="Selected work, side projects and research." />
 
       <section className="relative overflow-hidden">
         <HeaderBackdrop />
@@ -60,7 +60,7 @@ export default function Projects() {
         <div className="gutter relative py-12 md:py-16">
           <p className="eyebrow flex items-center gap-2 font-medium">
             <span className="h-px w-8 bg-gradient-to-r from-accent to-transparent" aria-hidden="true" />
-            Projects
+            Portfolio
           </p>
           <h1
             className="mt-3 max-w-3xl font-display font-bold leading-[1.05] tracking-[-0.03em]"
@@ -134,7 +134,7 @@ export default function Projects() {
               description={
                 projects.length
                   ? 'Try a different category or clear the search.'
-                  : 'Projects added from the admin dashboard will appear here.'
+                  : 'Portfolio pieces added from the admin dashboard will appear here.'
               }
             />
           ) : null}
