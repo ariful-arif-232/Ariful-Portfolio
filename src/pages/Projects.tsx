@@ -28,7 +28,13 @@ export default function Projects() {
 
   const categories = useMemo(() => {
     const set = new Set(projects.map((p) => p.category).filter(Boolean))
-    return ['All', ...Array.from(set).sort()]
+    // The three focus areas lead the row in a fixed order; everything else
+    // (academic/hardware categories) follows alphabetically.
+    const priority = ['Artificial Intelligence', 'Web', 'Graphics Design']
+    const rest = Array.from(set)
+      .filter((c) => !priority.includes(c))
+      .sort()
+    return ['All', ...priority.filter((c) => set.has(c)), ...rest]
   }, [projects])
 
   const visible = useMemo(() => {

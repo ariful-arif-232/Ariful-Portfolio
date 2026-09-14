@@ -30,14 +30,18 @@ const FOCUS_AREAS: Array<{
   description: string
   icon: IconName
   tone: string
+  soft: string
+  skills: string[]
 }> = [
   {
-    category: 'AI',
-    title: 'AI & Machine Learning',
+    category: 'Artificial Intelligence',
+    title: 'Artificial Intelligence',
     description:
       'Applied deep learning and computer vision research, trained and tested on real-world data instead of clean lab benchmarks.',
     icon: 'cpu',
     tone: 'from-accent to-accent-deep',
+    soft: 'from-accent-soft/70 via-surface to-surface',
+    skills: ['Python', 'TensorFlow', 'Keras', 'OpenCV'],
   },
   {
     category: 'Web',
@@ -46,14 +50,18 @@ const FOCUS_AREAS: Array<{
       'Full-stack products end to end — React front ends, Postgres-backed APIs and CMS-driven sites clients can actually update themselves.',
     icon: 'code',
     tone: 'from-ember to-accent',
+    soft: 'from-teal-soft/70 via-surface to-surface',
+    skills: ['React', 'TypeScript', 'Node.js', 'Supabase'],
   },
   {
     category: 'Graphics Design',
     title: 'Graphics Design',
     description:
-      'Visual identity, UI mockups and brand design — the craft side of making something look as considered as it works.',
+      'Visual identity, social ad creatives and brand design — the craft side of making something look as considered as it works.',
     icon: 'palette',
     tone: 'from-teal to-ember',
+    soft: 'from-ember/10 via-surface to-surface',
+    skills: ['Photoshop', 'Illustrator', 'Brand Identity'],
   },
 ]
 
@@ -73,7 +81,10 @@ export function FocusAreas() {
             <TiltCard max={6} className="h-full">
               <Link
                 to={`/projects?category=${encodeURIComponent(area.category)}`}
-                className="card card-hover group flex h-full flex-col p-6 sm:p-7"
+                className={cn(
+                  'card card-hover group flex h-full flex-col overflow-hidden bg-gradient-to-b p-6 sm:p-7',
+                  area.soft,
+                )}
               >
                 <span
                   className={cn(
@@ -84,7 +95,16 @@ export function FocusAreas() {
                   <Icon name={area.icon} className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-semibold">{area.title}</h3>
-                <p className="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-subtle">{area.description}</p>
+                <p className="mt-2 text-[0.9375rem] leading-relaxed text-subtle">{area.description}</p>
+
+                <ul className="mt-4 flex flex-1 flex-wrap items-start gap-1.5" aria-label={`${area.title} skills`}>
+                  {area.skills.map((skill) => (
+                    <li key={skill} className="chip bg-surface/80 text-[0.75rem]">
+                      {skill}
+                    </li>
+                  ))}
+                </ul>
+
                 <span className="mt-5 inline-flex items-center gap-1.5 text-[0.875rem] font-medium text-accent">
                   Explore work
                   <Icon
@@ -203,7 +223,7 @@ export function SkillsSection() {
   if (!skills.length) return null
 
   return (
-    <section id="skills" className="section-divider gutter scroll-mt-20 py-14 md:py-20">
+    <section id="skills" className="section-divider gutter scroll-mt-20 bg-soft py-14 md:py-20">
       <Reveal>
         <SectionHeading title="Skills" lead="The tools I reach for most often, grouped by where they sit in a build." />
       </Reveal>
