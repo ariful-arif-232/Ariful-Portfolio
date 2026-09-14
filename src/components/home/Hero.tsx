@@ -124,12 +124,19 @@ export function Hero() {
         <div className="absolute inset-0 bg-dot-grid opacity-[0.35]" />
         <motion.div
           style={enableParallax ? { x: blobFar, y: blobFarY } : undefined}
-          className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-accent/15 blur-[90px]"
-        />
+          className="absolute -left-24 -top-24 h-72 w-72"
+        >
+          <div className="h-full w-full rounded-full bg-accent/15 blur-[90px] motion-safe:animate-blob-float" />
+        </motion.div>
         <motion.div
           style={enableParallax ? { x: blobNear, y: blobNearY } : undefined}
-          className="absolute -right-16 top-1/3 h-80 w-80 rounded-full bg-teal/15 blur-[100px]"
-        />
+          className="absolute -right-16 top-1/3 h-80 w-80"
+        >
+          <div
+            className="h-full w-full rounded-full bg-teal/15 blur-[100px] motion-safe:animate-blob-float"
+            style={{ animationDelay: '-3.5s' }}
+          />
+        </motion.div>
         <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-white via-white/60 to-transparent" />
       </div>
 

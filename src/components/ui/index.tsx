@@ -170,6 +170,34 @@ export function BrowserFrame({ children, className }: { children: ReactNode; cla
   )
 }
 
+/* -------------------------------- Magnetic -------------------------------- */
+
+/**
+ * Pulls the wrapped element a few pixels toward the cursor as it approaches,
+ * the "magnetic button" cue common to premium product sites. Mouse-only,
+ * no-ops under reduced motion.
+ */
+function useMagnetic(strength = 0.35) {
+  const reduceMotion = useReducedMotion()
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const sx = useSpring(x, { stiffness: 300, damping: 20, mass: 0.5 })
+  const sy = useSpring(y, { stiffness: 300, damping: 20, mass: 0.5 })
+
+  function onPointerMove(e: ReactPointerEvent<HTMLElement>) {
+    if (reduceMotion || e.pointerType !== 'mouse') return
+    const rect = e.currentTarget.getBoundingClientRect()
+    x.set((e.clientX - rect.left - rect.width / 2) * strength)
+    y.set((e.clientY - rect.top - rect.height / 2) * strength)
+  }
+  function onPointerLeave() {
+    x.set(0)
+    y.set(0)
+  }
+
+  return { style: { x: sx, y: sy }, onPointerMove, onPointerLeave }
+}
+
 /* -------------------------------- Button -------------------------------- */
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'invert'
@@ -232,24 +260,41 @@ export function LinkButton({
   ariaLabel,
 }: LinkButtonProps) {
   const classes = cn(BUTTON_BASE, VARIANTS[variant], SIZES[size], className)
+  // Only the primary CTA gets the magnetic pull — enough to feel intentional
+  // without turning every link on the page into a moving target.
+  const magnetic = useMagnetic(0.3)
+  const magnetProps = variant === 'primary' ? magnetic : undefined
+
   if (to) {
     return (
-      <Link to={to} className={classes} aria-label={ariaLabel}>
-        {children}
-      </Link>
+      <motion.div className="inline-block" style={magnetProps?.style}>
+        <Link
+          to={to}
+          className={classes}
+          aria-label={ariaLabel}
+          onPointerMove={magnetProps?.onPointerMove}
+          onPointerLeave={magnetProps?.onPointerLeave}
+        >
+          {children}
+        </Link>
+      </motion.div>
     )
   }
   return (
-    <a
-      href={href}
-      className={classes}
-      aria-label={ariaLabel}
-      download={download}
-      target={external ? '_blank' : undefined}
-      rel={external ? 'noreferrer noopener' : undefined}
-    >
-      {children}
-    </a>
+    <motion.div className="inline-block" style={magnetProps?.style}>
+      <a
+        href={href}
+        className={classes}
+        aria-label={ariaLabel}
+        download={download}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noreferrer noopener' : undefined}
+        onPointerMove={magnetProps?.onPointerMove}
+        onPointerLeave={magnetProps?.onPointerLeave}
+      >
+        {children}
+      </a>
+    </motion.div>
   )
 }
 
