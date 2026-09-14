@@ -7,6 +7,18 @@ import { CursorGlow } from './CursorGlow'
 import { Icon } from '../ui'
 import { useSite } from '../../hooks/useSiteData'
 import { hexToRgbTriple } from '../../lib/utils'
+import { supabase } from '../../lib/supabase'
+
+/** Records one visit per browser tab session, for the admin visit counter. */
+function useVisitTracking() {
+  useEffect(() => {
+    if (sessionStorage.getItem('visit-recorded')) return
+    sessionStorage.setItem('visit-recorded', '1')
+    void supabase
+      .from('site_visits')
+      .insert({ path: window.location.pathname, referrer: document.referrer || null })
+  }, [])
+}
 
 /** Scrolls to top on navigation, or to the anchor when a hash is present. */
 function useRouteScroll() {
@@ -102,6 +114,7 @@ function ScrollTopButton() {
 
 export function PublicLayout() {
   useRouteScroll()
+  useVisitTracking()
   const { settings } = useSite()
   const shellRef = useRef<HTMLDivElement>(null)
 

@@ -11,6 +11,8 @@ interface Stats {
   featured: number
   skills: number
   unread: number
+  visits: number
+  visitsWeek: number
   recent: Project[]
   messages: ContactMessage[]
 }
@@ -21,6 +23,8 @@ const EMPTY_STATS: Stats = {
   featured: 0,
   skills: 0,
   unread: 0,
+  visits: 0,
+  visitsWeek: 0,
   recent: [],
   messages: [],
 }
@@ -30,19 +34,30 @@ function StatCard({
   value,
   icon,
   to,
+  hint,
 }: {
   label: string
   value: number
   icon: IconName
-  to: string
+  to?: string
+  hint?: string
 }) {
-  return (
-    <Link to={to} className="card card-hover block p-5">
+  const body = (
+    <>
       <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-soft text-subtle">
         <Icon name={icon} className="h-4 w-4" />
       </span>
       <p className="mt-4 font-display text-3xl font-semibold tracking-[-0.02em]">{value}</p>
       <p className="mt-1 text-[0.875rem] text-subtle">{label}</p>
+      {hint ? <p className="mt-0.5 text-[0.75rem] text-subtle/70">{hint}</p> : null}
+    </>
+  )
+
+  if (!to) return <div className="card p-5">{body}</div>
+
+  return (
+    <Link to={to} className="card card-hover block p-5">
+      {body}
     </Link>
   )
 }
@@ -52,24 +67,28 @@ export default function AdminDashboard() {
     'admin-dashboard',
     async () => {
       const count = { count: 'exact' as const, head: true }
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
 
-      const [projects, published, featured, skills, unread, recent, messages] = await Promise.all([
-        supabase.from('projects').select('id', count),
-        supabase.from('projects').select('id', count).eq('published', true),
-        supabase.from('projects').select('id', count).eq('featured', true),
-        supabase.from('skills').select('id', count),
-        supabase.from('contact_messages').select('id', count).eq('read', false),
-        supabase
-          .from('projects')
-          .select('*')
-          .order('updated_at', { ascending: false })
-          .limit(5),
-        supabase
-          .from('contact_messages')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(4),
-      ])
+      const [projects, published, featured, skills, unread, visits, visitsWeek, recent, messages] =
+        await Promise.all([
+          supabase.from('projects').select('id', count),
+          supabase.from('projects').select('id', count).eq('published', true),
+          supabase.from('projects').select('id', count).eq('featured', true),
+          supabase.from('skills').select('id', count),
+          supabase.from('contact_messages').select('id', count).eq('read', false),
+          supabase.from('site_visits').select('id', count),
+          supabase.from('site_visits').select('id', count).gte('created_at', weekAgo),
+          supabase
+            .from('projects')
+            .select('*')
+            .order('updated_at', { ascending: false })
+            .limit(5),
+          supabase
+            .from('contact_messages')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(4),
+        ])
 
       return {
         projects: projects.count ?? 0,
@@ -77,6 +96,8 @@ export default function AdminDashboard() {
         featured: featured.count ?? 0,
         skills: skills.count ?? 0,
         unread: unread.count ?? 0,
+        visits: visits.count ?? 0,
+        visitsWeek: visitsWeek.count ?? 0,
         recent: (recent.data ?? []) as Project[],
         messages: (messages.data ?? []) as ContactMessage[],
       }
@@ -93,12 +114,18 @@ export default function AdminDashboard() {
         Everything on the public site is managed from here.
       </p>
 
-      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         <StatCard label="Total projects" value={data.projects} icon="layout" to="/admin/projects" />
         <StatCard label="Published" value={data.published} icon="eye" to="/admin/projects" />
         <StatCard label="Featured" value={data.featured} icon="spark" to="/admin/projects" />
         <StatCard label="Skills" value={data.skills} icon="code" to="/admin/skills" />
         <StatCard label="Unread messages" value={data.unread} icon="message" to="/admin/messages" />
+        <StatCard
+          label="Site visits"
+          value={data.visits}
+          icon="trend"
+          hint={`${data.visitsWeek} in the last 7 days`}
+        />
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-2">
